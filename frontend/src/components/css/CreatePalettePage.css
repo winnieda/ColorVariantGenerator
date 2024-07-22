@@ -9,8 +9,16 @@
   margin-right: 10px;
 }
 
-.color-input input {
+.color-input .form-control {
   margin-right: 5px;
+}
+
+.color-input .hex-input {
+  width: 160px;
+}
+
+.color-input .rgb-input {
+  width: 100px;
 }
 
 .color-input button {
@@ -39,4 +47,12 @@
   font-family: 'Arial', sans-serif;
   font-size: 20px;
   line-height: 1.5;
+}
+
+.is-invalid input {
+  border-color: red;
+}
+
+.is-invalid .form-control {
+  border-color: red;
 }

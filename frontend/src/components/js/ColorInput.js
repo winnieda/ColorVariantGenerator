@@ -1,58 +1,48 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const ColorInput = ({ id, removeColor }) => {
-  const [hex, setHex] = useState('');
-  const [rgb, setRgb] = useState({ r: '', g: '', b: '' });
-
-  const handleHexChange = (e) => {
-    setHex(e.target.value);
-    // We will handle RGB conversion later
-  };
-
-  const handleRgbChange = (e) => {
-    const { name, value } = e.target;
-    setRgb({ ...rgb, [name]: value });
-    // We will handle Hex conversion later
+const ColorInput = ({ id, hex, r, g, b, isValid, onInputChange, removeColor }) => {
+  const handleInputChange = (field, value) => {
+    onInputChange(id, field, value);
   };
 
   return (
-    <div className="color-input">
+    <div className={`color-input ${isValid === false ? 'is-invalid' : ''}`}>
       <label>Color {id + 1}:</label>
       <input
         type="text"
         value={hex}
-        onChange={handleHexChange}
+        onChange={(e) => handleInputChange('hex', e.target.value)}
         placeholder="Hex"
-        maxLength={7}
+        className={`form-control hex-input ${isValid === false ? 'is-invalid' : ''}`}
       />
       <input
         type="number"
-        name="r"
-        value={rgb.r}
-        onChange={handleRgbChange}
+        value={r}
+        onChange={(e) => handleInputChange('r', e.target.value)}
         placeholder="R"
         min="0"
         max="255"
+        className={`form-control rgb-input ${isValid === false ? 'is-invalid' : ''}`}
       />
       <input
         type="number"
-        name="g"
-        value={rgb.g}
-        onChange={handleRgbChange}
+        value={g}
+        onChange={(e) => handleInputChange('g', e.target.value)}
         placeholder="G"
         min="0"
         max="255"
+        className={`form-control rgb-input ${isValid === false ? 'is-invalid' : ''}`}
       />
       <input
         type="number"
-        name="b"
-        value={rgb.b}
-        onChange={handleRgbChange}
+        value={b}
+        onChange={(e) => handleInputChange('b', e.target.value)}
         placeholder="B"
         min="0"
         max="255"
+        className={`form-control rgb-input ${isValid === false ? 'is-invalid' : ''}`}
       />
-      <button onClick={() => removeColor(id)}>Remove</button>
+      <button onClick={() => removeColor(id)} className="btn btn-danger">Remove</button>
     </div>
   );
 };
