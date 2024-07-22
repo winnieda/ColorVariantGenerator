@@ -1,0 +1,42 @@
+/* CreatePalettePage.css */
+.color-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.color-input label {
+  margin-right: 10px;
+}
+
+.color-input input {
+  margin-right: 5px;
+}
+
+.color-input button {
+  margin-left: 10px;
+}
+
+.color-outputs {
+  margin-top: 20px;
+}
+
+.generated-colors {
+  margin-top: 10px; /* Added margin to ensure separation from the title */
+}
+
+.add-color-btn {
+  background: none;
+  border: none;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  margin-top: 10px; /* Same margin as between color input elements */
+}
+
+.explanation p {
+  font-family: 'Arial', sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+}

@@ -1,0 +1,31 @@
+/* LandingPage.css */
+.landing-header {
+    margin-top: 60px; /* Add some top margin for spacing */
+}
+
+.landing-header h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.landing-header p {
+    font-size: 1.25rem;
+    color: #555;
+}
+
+.landing-buttons .btn {
+    font-size: 1.2rem;
+    padding: 15px 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.landing-buttons .btn i {
+    margin-right: 10px;
+}
+
+.landing-buttons .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+  

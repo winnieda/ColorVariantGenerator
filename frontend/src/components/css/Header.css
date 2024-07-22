@@ -1,0 +1,10 @@
+/* Header.css */
+header {
+  width: 100%;
+  background-color: #343a40;
+  color: white;
+  padding: 10px 0;
+  position: relative; /* Ensure it doesn't stay fixed */
+  top: 0; /* Align to the top */
+  margin: 0; /* Remove any default margin */
+}
