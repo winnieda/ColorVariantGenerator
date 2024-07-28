@@ -242,7 +242,7 @@ const CreatePalettePage = () => {
           </div>
             <div className="row">
               {generatedPalettes.map((palette, index) => (
-                <div key={index} className="palette-output col-md-12 col-xl-6">
+                <div key={index} className="palette-output col-md-10 col-xl-5">
                   <div className="palette-label">Palette {index + 1}:</div>
                   <ColorOutputBatch palette={palette} />
                 </div>
