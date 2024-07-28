@@ -7,7 +7,9 @@ const ColorInput = ({ id, hex, r, g, b, isValid, onInputChange, removeColor }) =
 
   return (
     <div className={`color-input ${isValid === false ? 'is-invalid' : ''}`}>
-      <label>Color {id + 1}:</label>
+      <label className='color-label'>
+        Color {id + 1}:
+        </label>
       <input
         type="text"
         value={hex}

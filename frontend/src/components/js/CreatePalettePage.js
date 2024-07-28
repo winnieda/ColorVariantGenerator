@@ -207,17 +207,17 @@ const CreatePalettePage = () => {
           <div className="row">
             <div className="col-md-3">
               <div className="valueInput mb-3">
-                <label htmlFor="colorGrouping">Color Grouping: </label>
-                <label className="labelExample" htmlFor="colorGroupingExample">ex: [1, 3, 4], [2, 5-7]</label>
-                <input type="text" id="colorGrouping" name="colorGrouping" className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`} />
-              </div>
-              <div className="valueInput mb-3">
                 <label htmlFor="variance">Variance:</label>
                 <input type="number" id="variance" name="variance" className={`form-control ${varianceError ? 'is-invalid' : ''}`} />
               </div>
               <div className="valueInput mb-3">
                 <label htmlFor="numToGenerate">Number of Palettes to Generate:</label>
                 <input type="number" id="numToGenerate" name="numToGenerate" className={`form-control ${numToGenerateError ? 'is-invalid' : ''}`} />
+              </div>
+              <div className="valueInput mb-3">
+                <label htmlFor="colorGrouping">Color Grouping: </label>
+                <label className="labelExample" htmlFor="colorGroupingExample">ex: [1, 3, 4], [2, 5-7]</label>
+                <input type="text" id="colorGrouping" name="colorGrouping" className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`} />
               </div>
               <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palette</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
@@ -242,7 +242,7 @@ const CreatePalettePage = () => {
           </div>
             <div className="row">
               {generatedPalettes.map((palette, index) => (
-                <div key={index}>
+                <div key={index} className="palette-output col-md-12 col-xl-6">
                   <div className="palette-label">Palette {index + 1}:</div>
                   <ColorOutputBatch palette={palette} />
                 </div>
