@@ -1,35 +1,45 @@
 import React from 'react';
-import '../css/ColorOutput.css'; // Import the CSS file for styling
+import '../css/ColorOutput.css';
 
-const rgbToHex = (rgb) => {
-  const [r, g, b] = rgb.match(/\d+/g).map(Number);
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-};
+const ColorOutput = ({ hex }) => {
+  console.log('hex:', hex)
 
-const ColorOutput = ({ color }) => {
-  const hexValue = rgbToHex(color);
-  const rgbValue = color.match(/\d+/g).join(", ");
+  const hexToRgb = (hex) => {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+      parseInt(result[1], 16),
+      parseInt(result[2], 16),
+      parseInt(result[3], 16)
+     ] : null;
+  };
   
+  var reg=/^#([0-9a-f]{3}){1,2}$/i;
+  if (!reg.test(hex)){
+    return;
+  }
+
+  const [r, g, b] = hexToRgb(hex);
+
   return (
     <div className="color-output-container">
-      <div className="color-box" style={{ backgroundColor: color }}></div>
+      <div className="color-box" style={{ backgroundColor: hex }}></div>
       <div className="color-info">
-        {hexValue}
-        <br />
-        [{rgbValue}]
+        <div>{hex}</div>
+        <div>[{r}, {g}, {b}]</div>
       </div>
     </div>
   );
 };
 
-const ColorOutputBatch = ({ colors }) => {
-  return (
+export const ColorOutputBatch = ({ palette }) => {
+  console.log('palette:', palette);
+  return palette ? (
     <div className="color-output-batch">
-      {colors.map((color, index) => (
-        <ColorOutput key={index} color={color} />
+      {palette.map((color, index) => (
+        <ColorOutput key={index} hex={color} />
       ))}
     </div>
-  );
+  ) : (<div></div>);
 };
 
-export { ColorOutput, ColorOutputBatch };
+export default ColorOutput;

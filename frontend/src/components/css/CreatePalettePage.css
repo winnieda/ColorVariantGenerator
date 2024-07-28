@@ -9,6 +9,10 @@
   margin-right: 10px;
 }
 
+.color-input label .labelExample {
+  color: gray;
+}
+
 .color-input .form-control {
   margin-right: 5px;
 }
@@ -55,4 +59,12 @@
 
 .is-invalid .form-control {
   border-color: red;
+}
+
+.valueInput label {
+  margin-right: 5px;
+}
+
+.labelExample {
+  color: grey;
 }

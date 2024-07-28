@@ -30,9 +30,8 @@ def generate_color_variant(base_rgb, variance):
     )
     return rgb_to_hex(new_rgb)
 
-def generate_color_variants(base_color, variance, num_variants):
-    base_rgb = hex_to_rgb(base_color)
-    variants = [generate_color_variant(base_rgb, variance) for _ in range(num_variants)]
+def generate_palette_variant(base_colors, variance):
+    variants = [generate_color_variant(hex_to_rgb(color), variance) for color in base_colors]
     return variants
 
 @app.route('/')
@@ -45,11 +44,12 @@ def generate_variants():
     colors = data['colors']
     variance = data['variance']
     num_to_generate = data['numToGenerate']
+    colorGrouping = data['colorGrouping']
 
     all_variants = []
-    for color in colors:
-        variants = generate_color_variants(color, variance, num_to_generate)
-        all_variants.append(variants)
+    for _ in range(num_to_generate):
+        palette = generate_palette_variant(colors, variance)
+        all_variants.append(palette)
 
     return jsonify({'variants': all_variants})
 

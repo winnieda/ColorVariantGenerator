@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import ColorInput from './ColorInput';
 import { ColorOutputBatch } from './ColorOutput';
 import '../css/CreatePalettePage.css';
+import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
 
 const CreatePalettePage = () => {
   const [colors, setColors] = useState([{ id: 0, hex: '', r: '', g: '', b: '' }]);
   const [generatedColorsVisible, setGeneratedColorsVisible] = useState(false);
+  const [generatedPalettes, setGeneratedPalettes] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [colorGroupingError, setColorGroupingError] = useState(false);
+  const [varianceError, setVarianceError] = useState(false);
+  const [numToGenerateError, setNumToGenerateError] = useState(false);
 
   const addColor = () => {
     setColors([...colors, { id: colors.length, hex: '', r: '', g: '', b: '' }]);
@@ -16,27 +22,52 @@ const CreatePalettePage = () => {
     setColors(colors.filter((color) => color.id !== id));
   };
 
-  const handleGeneratePalette = () => {
+  const handleGeneratePalette = async () => {
     const error = validateForm();
     if (error) {
       setErrorMessage(error);
     } else {
       setErrorMessage('');
-      setGeneratedColorsVisible(true);
-      // Placeholder for generate palette functionality
+      const variance = parseInt(document.getElementById('variance').value);
+      const numToGenerate = parseInt(document.getElementById('numToGenerate').value);
+      const colorGrouping = processNormalizedInput(document.getElementById('colorGrouping').value);
+      
+      try {
+        const response = await axios.post('http://localhost:5000/api/generate-variants', {
+          colors: colors.map(color => color.hex),
+          variance: variance,
+          numToGenerate: numToGenerate,
+          colorGrouping: colorGrouping
+        });
+        console.log("Response: ", response.data.variants);
+        setGeneratedPalettes(response.data.variants);
+        setGeneratedColorsVisible(true);
+      } catch (error) {
+        console.error('Error generating color variants:', error);
+      }
     }
   };
 
   const handleColorInputChange = (id, field, value) => {
     const updatedColors = colors.map((color) => {
       if (color.id === id) {
-        const updatedColor = { ...color, [field]: value };
+        let updatedColor = { ...color, [field]: value };
         const { hex, r, g, b } = updatedColor;
         if (field === 'hex') {
+          // Remove any manually typed '#' and invalid characters
+          value = value.replace(/[^0-9A-F]/gi, '');
+          if (value) {
+            updatedColor.hex = '#' + value;
+          } else {
+            updatedColor.hex = '';
+          }
           // Validate and update RGB fields
-          if (/^#[0-9A-F]{6}$/i.test(hex)) {
-            const [r, g, b] = hexToRgb(hex);
+          if (/^[0-9A-F]{6}$/i.test(value)) {
+            const {r, g, b} = hexToRgb('#' + value);
             return { ...updatedColor, r, g, b, isValid: true };
+          } else if (value === '') {
+            // If hex is cleared, also clear RGB values
+            return { ...updatedColor, r: '', g: '', b: '', isValid: false };
           } else {
             return { ...updatedColor, isValid: false };
           }
@@ -57,6 +88,11 @@ const CreatePalettePage = () => {
   };
 
   const validateForm = () => {
+    // Check for at least one color
+    if (colors.length === 0) {
+      return 'There must be at least one color.';
+    }
+
     // Check for invalid colors
     for (const color of colors) {
       if (color.isValid === false) {
@@ -71,48 +107,80 @@ const CreatePalettePage = () => {
       }
     }
 
+    // Handle the color grouping
+    let colorGrouping = document.getElementById('colorGrouping').value;
+    console.log('Before colorGrouping: ', colorGrouping);
+    if (colorGrouping !== "") {
+      try {
+        colorGrouping = normalizeInput(colorGrouping);
+        // Run the processing function so we can check for bad input
+        processNormalizedInput(colorGrouping, colors.length);
+        document.getElementById('colorGrouping').value = colorGrouping;
+        setColorGroupingError(false);
+      } catch (err) {
+        console.error("ColorGrouping Error:", err);
+        setColorGroupingError(true);
+        return err.message;
+      }
+    } else {
+      setColorGroupingError(false);
+    }
+    console.log('After colorGrouping: ', colorGrouping);
+
     // Check for blank variance
     const variance = document.getElementById('variance').value;
     if (variance === '') {
+      setVarianceError(true);
       return 'Variance is blank.';
+    } else {
+      setVarianceError(false);
     }
 
     // Check if variance is 0 or higher
     if (parseInt(variance) < 0) {
+      setVarianceError(true);
       return 'Variance must be 0 or higher.';
+    } else {
+      setVarianceError(false);
     }
 
-    // Check for blank number of colors to generate
+    // Check for blank number of palettes to generate
     const numToGenerate = document.getElementById('numToGenerate').value;
     if (numToGenerate === '') {
-      return 'Number of colors is blank.';
+      setNumToGenerateError(true);
+      return 'Number of palettes is blank.';
+    } else {
+      setNumToGenerateError(false);
     }
 
-    // Check if number of colors is 0 or higher
+    // Check if number of palettes is 0 or higher
     if (parseInt(numToGenerate) <= 0) {
-      return 'Number of colors must be higher than 0.';
+      setNumToGenerateError(true);
+      return 'Number of palettes must be higher than 0.';
+    } else {
+      setNumToGenerateError(false);
     }
 
     return null; // No errors found
   };
 
   const hexToRgb = (hex) => {
-    hex = hex.replace(/^#/, '');
-    return [
-      parseInt(hex.slice(0, 2), 16),
-      parseInt(hex.slice(2, 4), 16),
-      parseInt(hex.slice(4, 6), 16),
-    ];
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   };
 
   const componentToHex = (c) => {
     var hex = c.toString(16);
     return hex.length === 1 ? "0" + hex : hex;
-  }
+  };
 
   const rgbToHex = (r, g, b) => {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-  }
+  };
 
   return (
     <div className="container mt-5">
@@ -138,13 +206,18 @@ const CreatePalettePage = () => {
         <div className="col-12 mb-4">
           <div className="row">
             <div className="col-md-3">
-              <div className="mb-3">
-                <label htmlFor="variance">Variance:</label>
-                <input type="number" id="variance" name="variance" className="form-control" />
+              <div className="valueInput mb-3">
+                <label htmlFor="colorGrouping">Color Grouping: </label>
+                <label className="labelExample" htmlFor="colorGroupingExample">ex: [1, 3, 4], [2, 5-7]</label>
+                <input type="text" id="colorGrouping" name="colorGrouping" className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`} />
               </div>
-              <div className="mb-3">
-                <label htmlFor="numToGenerate">Number of Colors to Generate:</label>
-                <input type="number" id="numToGenerate" name="numToGenerate" className="form-control" />
+              <div className="valueInput mb-3">
+                <label htmlFor="variance">Variance:</label>
+                <input type="number" id="variance" name="variance" className={`form-control ${varianceError ? 'is-invalid' : ''}`} />
+              </div>
+              <div className="valueInput mb-3">
+                <label htmlFor="numToGenerate">Number of Palettes to Generate:</label>
+                <input type="number" id="numToGenerate" name="numToGenerate" className={`form-control ${numToGenerateError ? 'is-invalid' : ''}`} />
               </div>
               <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palette</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
@@ -156,15 +229,24 @@ const CreatePalettePage = () => {
             </div>
           </div>
         </div>
+        <div className="col-12">
+          <div className="color-outputs">
+            <h3>Original Palette:</h3>
+            <ColorOutputBatch palette={colors.map(color => color.hex)} />
+          </div>
+        </div>
         {generatedColorsVisible && (
           <div className="col-12">
-          <div className="color-outputs">
-            <h3>Original Colors:</h3>
-            {/* Print Original Colors */}
-          </div>
             <div className="color-outputs">
-              <h3>Generated Colors:</h3>
-              {/* ColorOutputBatch will be used here after integrating with backend */}
+            <h3>Variant Palettes:</h3>
+          </div>
+            <div className="row">
+              {generatedPalettes.map((palette, index) => (
+                <div key={index}>
+                  <div className="palette-label">Palette {index + 1}:</div>
+                  <ColorOutputBatch palette={palette} />
+                </div>
+              ))}
             </div>
           </div>
         )}
