@@ -48,7 +48,7 @@
   margin-top: 10px; /* Same margin as between color input elements */
 }
 
-.explanation p {
+.explanation pre {
   font-family: 'Arial', sans-serif;
   font-size: 20px;
   line-height: 1.5;

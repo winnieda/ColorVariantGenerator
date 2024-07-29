@@ -95,9 +95,7 @@ export function processNormalizedInput(input, colorsLength = null) {
     inputArray = pruneLooseIntegers(inputArray);
     checkForDuplicates(inputArray);
 
-    console.log("processNormalizedInput: ", colorsLength);
     if (colorsLength != null) {
-        console.log("Attempting to check against: ", colorsLength);
         const invalidColors = new Set();
         for (let i = 0; i < inputArray.length; ++i){
             for (let j = 0; j < inputArray[i].length; ++j){

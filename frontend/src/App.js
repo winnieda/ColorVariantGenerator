@@ -14,7 +14,8 @@ const App = () => {
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route path="/create-palette" element={<CreatePalettePage />} />
-          <Route path="/create-picture-variations" element={<div>Create Picture Variations Page</div>} />
+          <Route path="/picture-presets" element={<div>Picture Presets page coming soon</div>} />
+          <Route path="/how-to-use" element={<div>How to Use page coming soon</div>} />
         </Routes>
       </div>
       <Footer />

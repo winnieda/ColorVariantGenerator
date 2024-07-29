@@ -2,7 +2,6 @@ import React from 'react';
 import '../css/ColorOutput.css';
 
 const ColorOutput = ({ hex }) => {
-  console.log('hex:', hex)
 
   const hexToRgb = (hex) => {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32,7 +31,6 @@ const ColorOutput = ({ hex }) => {
 };
 
 export const ColorOutputBatch = ({ palette }) => {
-  console.log('palette:', palette);
   return palette ? (
     <div className="color-output-batch">
       {palette.map((color, index) => (

@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import random
 
-app = Flask(__name__)
+app = Flask(__name__)71
 CORS(app)
 
 def hex_to_rgb(hex_color):

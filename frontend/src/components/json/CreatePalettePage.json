@@ -1,0 +1,14 @@
+{
+    "tutorial": [
+        "Welcome to the Color Variant Generator!\n",
+        "Create a default palette by entering colors above.\n",
+        "Enter a variance to determine how much the colors should change.\n",
+        "A variance of 20-30 will create a small change,\n",
+        "   and a variance of 70-100 will create a significant change\n",
+        "Enter how many new palettes you'd like to generate\n",
+        "Enter color groups to make colors have the same changes,\n",
+        "   check the How to Use page for more information.\n",
+        "I hope you enjoy, have fun!"
+        ]
+  }
+  

@@ -5,7 +5,8 @@ const Footer = () => {
   return (
     <footer className="bg-dark text-white p-3 mt-5">
       <div className="container">
-        <p>Footer Information Here</p>
+        <p>Made by Daniel Winnie https://github.com/winnieda<br/>
+          July 2024</p>
       </div>
     </footer>
   );

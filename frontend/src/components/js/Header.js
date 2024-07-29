@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Header.css'; // Import the CSS file for header styling
+import '../css/Header.css';
+import bannerimage from '../../assets/images/CVGBanner.jpg'
 
 const Header = () => {
   return (

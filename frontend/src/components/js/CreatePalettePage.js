@@ -4,6 +4,7 @@ import ColorInput from './ColorInput';
 import { ColorOutputBatch } from './ColorOutput';
 import '../css/CreatePalettePage.css';
 import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
+import palettePageJson from '../json/CreatePalettePage.json';
 
 const CreatePalettePage = () => {
   const [colors, setColors] = useState([{ id: 0, hex: '', r: '', g: '', b: '' }]);
@@ -39,7 +40,6 @@ const CreatePalettePage = () => {
           numToGenerate: numToGenerate,
           colorGrouping: colorGrouping
         });
-        console.log("Response: ", response.data.variants);
         setGeneratedPalettes(response.data.variants);
         setGeneratedColorsVisible(true);
       } catch (error) {
@@ -109,7 +109,6 @@ const CreatePalettePage = () => {
 
     // Handle the color grouping
     let colorGrouping = document.getElementById('colorGrouping').value;
-    console.log('Before colorGrouping: ', colorGrouping);
     if (colorGrouping !== "") {
       try {
         colorGrouping = normalizeInput(colorGrouping);
@@ -125,7 +124,6 @@ const CreatePalettePage = () => {
     } else {
       setColorGroupingError(false);
     }
-    console.log('After colorGrouping: ', colorGrouping);
 
     // Check for blank variance
     const variance = document.getElementById('variance').value;
@@ -224,7 +222,7 @@ const CreatePalettePage = () => {
             </div>
             <div className="col-md-9">
               <div className="explanation">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{palettePageJson.tutorial}</pre>
               </div>
             </div>
           </div>
