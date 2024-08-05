@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { PaletteProvider } from './components/js/context/PaletteContext.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <PaletteProvider>
+      <App />
+    </PaletteProvider>
   </React.StrictMode>
 );
 

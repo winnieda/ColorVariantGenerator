@@ -73,3 +73,7 @@
 .palette-output {
   margin-right: 50px;
 }
+
+.default-colors .color-output-batch {
+  width: 1080px;
+}

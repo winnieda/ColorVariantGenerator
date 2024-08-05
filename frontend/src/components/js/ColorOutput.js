@@ -17,6 +17,11 @@ const ColorOutput = ({ hex }) => {
     return;
   }
 
+  // Just return here if it's not valid hex
+  if (!(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex))){
+    return (<div></div>);
+  }
+
   const [r, g, b] = hexToRgb(hex);
 
   return (
