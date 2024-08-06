@@ -11,6 +11,7 @@ export const PaletteProvider = ({ children }) => {
     colorGroupingError: false,
     varianceError: false,
     numToGenerateError: false,
+    uploadedImage: null, 
   };
 
   const [paletteState, setPaletteState] = useState(initialState);
@@ -30,7 +31,7 @@ export const PaletteProvider = ({ children }) => {
     const handlePageRefresh = () => {
       localStorage.removeItem('paletteState');
     };
-    
+
     window.addEventListener('beforeunload', handlePageRefresh);
     return () => {
       window.removeEventListener('beforeunload', handlePageRefresh);

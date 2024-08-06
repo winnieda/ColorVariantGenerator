@@ -1,12 +1,11 @@
-// src/components/js/CreatePalettePage.js
 import React, { useContext } from 'react';
 import axios from 'axios';
 import ColorInput from './ColorInput';
 import { ColorOutputBatch } from './ColorOutput';
 import '../css/CreatePalettePage.css';
 import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
-import palettePageJson from '../json/CreatePalettePage.json';
 import { PaletteContext } from './context/PaletteContext.js';
+import ImageUpload from './ImageUpload'; // Import ImageUpload component
 
 const CreatePalettePage = () => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
@@ -18,7 +17,8 @@ const CreatePalettePage = () => {
     errorMessage,
     colorGroupingError,
     varianceError,
-    numToGenerateError
+    numToGenerateError,
+    uploadedImage // Add this line
   } = paletteState;
 
   const addColor = () => {
@@ -225,15 +225,7 @@ const CreatePalettePage = () => {
               <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palette</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
             </div>
-            <div className="col-md-9">
-              <div className="explanation">
-                <pre style={{ whiteSpace: 'pre-wrap' }}>{palettePageJson.tutorial}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-12">
-          <div className="color-outputs">
+            <ImageUpload />
           </div>
         </div>
         {generatedColorsVisible && (

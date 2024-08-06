@@ -1,10 +1,9 @@
-/* Footer.css */
 footer {
   width: 100%;
   background-color: #343a40;
   color: white;
   padding: 10px 0;
-  position: relative; /* Ensure it doesn't stay fixed */
-  bottom: 0; /* Align to the bottom */
-  margin: 0; /* Remove any default margin */
+  position: relative; 
+  bottom: 0;
+  margin: 0; 
 }
