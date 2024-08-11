@@ -18,7 +18,7 @@ const ImageUpload = () => {
   };
 
   return (
-    <div className="image-upload col-9">
+    <div className="image-upload col-12">
       <input className="col-md-12" type="file" accept="image/*" onChange={handleImageChange} />
       <div className='image-input-output row'>
         <div className='image-container col-6'>

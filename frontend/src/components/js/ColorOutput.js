@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/ColorOutput.css';
 
-const ColorOutput = ({ hex }) => {
+const ColorOutput = ({ hex, wide }) => {
 
   const hexToRgb = (hex) => {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -24,9 +24,11 @@ const ColorOutput = ({ hex }) => {
 
   const [r, g, b] = hexToRgb(hex);
 
+  const columns = wide ? "col-sm-6 col-md-3 col-lg-2" : "col-md-6 col-lg-4";
+
   return (
-    <div className="color-output-container">
-      <div className="color-box" style={{ backgroundColor: hex }}></div>
+  <div className={`color-output-container ${columns}`}>
+    <div className="color-box" style={{ backgroundColor: hex }}></div>
       <div className="color-info">
         <div>{hex}</div>
         <div>[{r}, {g}, {b}]</div>
@@ -35,11 +37,11 @@ const ColorOutput = ({ hex }) => {
   );
 };
 
-export const ColorOutputBatch = ({ palette }) => {
+export const ColorOutputBatch = ({ palette, wide }) => {
   return palette ? (
-    <div className="color-output-batch">
+    <div className="color-output-batch col-12">
       {palette.map((color, index) => (
-        <ColorOutput key={index} hex={color} />
+        <ColorOutput key={index} hex={color} wide={wide} />
       ))}
     </div>
   ) : (<div></div>);

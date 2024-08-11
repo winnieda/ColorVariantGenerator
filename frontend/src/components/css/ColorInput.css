@@ -1,0 +1,38 @@
+.color-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.color-input label {
+    margin-right: 10px;
+    width: 75px;
+}
+
+.color-input .input-container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.color-input .form-control {
+    margin-right: 5px;
+}
+
+.color-input .hex-input {
+    width: 160px;
+}
+
+.color-input .rgb-input {
+    width: 100px;
+}
+
+.eyedropper-button {
+    margin-left: 0px;
+    background: none;
+    border: none;
+}
+
+.btn-danger {
+    margin-left: 10px;
+}

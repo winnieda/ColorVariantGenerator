@@ -18,7 +18,7 @@ const CreatePalettePage = () => {
     colorGroupingError,
     varianceError,
     numToGenerateError,
-    uploadedImage // Add this line
+    uploadedImage
   } = paletteState;
 
   const addColor = () => {
@@ -203,7 +203,7 @@ const CreatePalettePage = () => {
           </div>
           <button onClick={addColor} className="add-color-btn">+ Add Color</button>
           <div className="default-colors">
-            <ColorOutputBatch palette={colors.map(color => color.hex)} />
+            <ColorOutputBatch palette={colors.map(color => color.hex)} wide={true} />
           </div>
         </div>
         <div className="col-12 mb-4">
@@ -225,7 +225,12 @@ const CreatePalettePage = () => {
               <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palette</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
             </div>
-            <ImageUpload />
+            <div className="image-upload-box col-md-9">
+              <div className='col-md-12'>
+                <label htmlFor="imageupload">Upload Image for Variation:</label>
+                <ImageUpload />
+              </div>
+            </div>
           </div>
         </div>
         {generatedColorsVisible && (
@@ -235,9 +240,9 @@ const CreatePalettePage = () => {
             </div>
             <div className="row">
               {generatedPalettes.map((palette, index) => (
-                <div key={index} className="palette-output col-md-10 col-xl-5">
-                  <div className="palette-label">Palette {index + 1}:</div>
-                  <ColorOutputBatch palette={palette} />
+                <div key={index} className="palette-output col-sm-12 col-md-6">
+                  <div className="palette-label col-12">Palette {index + 1}:</div>
+                  <ColorOutputBatch palette={palette} wide={false} />
                 </div>
               ))}
             </div>

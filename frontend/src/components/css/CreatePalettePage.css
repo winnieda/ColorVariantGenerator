@@ -1,34 +1,3 @@
-.color-input {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.color-input label {
-  margin-right: 10px;
-  width: 75px;
-}
-
-.color-input label .labelExample {
-  color: gray;
-}
-
-.color-input .form-control {
-  margin-right: 5px;
-}
-
-.color-input .hex-input {
-  width: 160px;
-}
-
-.color-input .rgb-input {
-  width: 100px;
-}
-
-.color-input button {
-  margin-left: 10px;
-}
-
 .color-outputs {
   margin-top: 20px;
 }
@@ -70,7 +39,16 @@
 }
 
 .palette-output {
-  margin-right: 50px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.palette-output:hover {
+  background-color: rgba(80, 80, 80, 0.1);
+}
+
+.palette-output:active {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .default-colors .color-output-batch {
@@ -101,4 +79,8 @@
   max-height: 100%;
   object-fit: contain;
   align-self: flex-start;
+}
+
+.image-upload-box {
+  display: flex;
 }
