@@ -5,7 +5,7 @@ import { ColorOutputBatch } from './ColorOutput';
 import '../css/CreatePalettePage.css';
 import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
 import { PaletteContext } from './context/PaletteContext.js';
-import ImageUpload from './ImageUpload'; // Import ImageUpload component
+import ImageUpload from './ImageUpload';
 
 const CreatePalettePage = () => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
@@ -34,6 +34,24 @@ const CreatePalettePage = () => {
       colors: colors.filter((color) => color.id !== id)
     });
   };
+
+  const onEyedropperClick = async (id) => {
+    if (!window.EyeDropper) {
+      alert('Sorry, your browser does not support the EyeDropper API.' +
+        ' Firefox users can go to More Tools > Eyedropper and paste into ' +
+        'the hex field as an easy alternative.');
+      return;
+    }
+    try {
+      const eyeDropper = new window.EyeDropper();
+      eyeDropper.open().then((result) => {
+        handleColorInputChange(id, 'hex', result.sRGBHex);
+      });
+    } catch (error) {
+      console.error('Error using the EyeDropper API:', error);
+    }
+  };
+  
 
   const handleGeneratePalette = async () => {
     const error = validateForm();
@@ -198,6 +216,7 @@ const CreatePalettePage = () => {
                 isValid={color.isValid}
                 onInputChange={handleColorInputChange}
                 removeColor={removeColor}
+                onEyedropperClick={onEyedropperClick}
               />
             ))}
           </div>

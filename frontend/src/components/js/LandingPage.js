@@ -14,7 +14,7 @@ const LandingPage = () => {
           <div className="row justify-content-center">
             <div className="col-lg-5 col-md-9 mb-3">
               <Link to="/create-palette" className="btn btn-primary btn-lg w-100">
-                <i className="fas fa-palette"></i> Create new Palette
+                <i className="fas fa-palette"></i> Create Palette or Variants
               </Link>
             </div>            
             <div className="col-md-4 col-lg-3 mb-3">

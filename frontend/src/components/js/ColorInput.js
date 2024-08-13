@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/ColorInput.css';
 
-const ColorInput = ({ id, hex, r, g, b, isValid, onInputChange, removeColor }) => {
+const ColorInput = ({ id, hex, r, g, b, isValid, onInputChange, removeColor, onEyedropperClick }) => {
   const handleInputChange = (field, value) => {
     onInputChange(id, field, value);
   };
@@ -46,7 +46,7 @@ const ColorInput = ({ id, hex, r, g, b, isValid, onInputChange, removeColor }) =
           max="255"
           className={`form-control rgb-input ${isValid === false ? 'is-invalid' : ''}`}
         />
-        <button onClick={() => removeColor(id)} className="eyedropper-button">
+        <button onClick={() => onEyedropperClick(id)} className="eyedropper-button">
           <i className="fas fa-eye-dropper"></i>
         </button>
       </div>
