@@ -9,6 +9,8 @@ import ImageUpload from './ImageUpload';
 
 const CreatePalettePage = () => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
+  const [selectedPaletteIndex, setSelectedPaletteIndex] = React.useState(null);
+
 
   const {
     colors,
@@ -200,6 +202,18 @@ const CreatePalettePage = () => {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
   };
 
+  const handlePaletteClick = (index) => {
+    console.log(`Palette ${index + 1} clicked`);
+    
+    if (selectedPaletteIndex !== index) {
+      setSelectedPaletteIndex(index);
+    }
+  };
+  
+  React.useEffect(() => {
+    setSelectedPaletteIndex(null);
+  }, [generatedPalettes]);
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -259,7 +273,11 @@ const CreatePalettePage = () => {
             </div>
             <div className="row">
               {generatedPalettes.map((palette, index) => (
-                <div key={index} className="palette-output col-sm-12 col-md-6">
+                <div
+                  key={index}
+                  className={`palette-output col-sm-12 col-md-6 ${uploadedImage && selectedPaletteIndex != index ? 'hoverable' : ''} ${selectedPaletteIndex === index ? 'selected' : ''}`}
+                  onClick={() => uploadedImage && handlePaletteClick(index)}
+                >
                   <div className="palette-label col-12">Palette {index + 1}:</div>
                   <ColorOutputBatch palette={palette} wide={false} />
                 </div>

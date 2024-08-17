@@ -41,15 +41,21 @@
 .palette-output {
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0);
+  cursor: default;
 }
 
-.palette-output:hover {
+.palette-output.hoverable:hover {
   background-color: rgba(80, 80, 80, 0.1);
 }
 
-.palette-output:active {
-  background-color: rgba(0, 0, 0, 0.1);
+.palette-output.selected {
+  background-color: rgba(0, 0, 0, 0.2);
 }
+
+.palette-output {
+  transition: background-color 0.3s ease;
+}
+
 
 .default-colors .color-output-batch {
   width: 1080px;
