@@ -12,6 +12,8 @@ export const PaletteProvider = ({ children }) => {
     varianceError: false,
     numToGenerateError: false,
     uploadedImage: null, 
+    originalColors: null, // Colors of current variant palettes
+    variantImage: null,
   };
 
   const [paletteState, setPaletteState] = useState(initialState);
