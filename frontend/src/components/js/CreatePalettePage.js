@@ -11,6 +11,8 @@ import loadingImage from '../../assets/images/loadingIcon.jpg';
 const CreatePalettePage = () => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
   const [selectedPaletteIndex, setSelectedPaletteIndex] = React.useState(null);
+  const [uploadedImage, setUploadedImage] = React.useState(null);
+  const [variantImage, setVariantImage] = React.useState(null);
 
   const {
     colors,
@@ -20,9 +22,7 @@ const CreatePalettePage = () => {
     colorGroupingError,
     varianceError,
     numToGenerateError,
-    uploadedImage,
     originalColors, // Colors of current variant palettes
-    variantImage,
   } = paletteState;
 
   const addColor = () => {
@@ -213,19 +213,13 @@ const CreatePalettePage = () => {
     if (selectedPaletteIndex !== index) {
       setSelectedPaletteIndex(index);
       try {
-        setPaletteState({
-          ...paletteState,
-          variantImage: loadingImage,
-        });
+        setVariantImage(loadingImage);
         const response = await axios.post('http://localhost:5000/api/create-variant-picture', {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
           originalImage: uploadedImage,
         });
-        setPaletteState({
-          ...paletteState,
-          variantImage: response.data.variantImage,
-        });
+        setVariantImage(response.data.variantImage);
       } catch (error) {
         console.error('Error generating color variants:', error);
       }
@@ -283,7 +277,7 @@ const CreatePalettePage = () => {
             <div className="image-upload-box col-md-9">
               <div className='col-md-12'>
                 <label htmlFor="imageupload">Upload Image for Variation:</label>
-                <ImageUpload variantImage={variantImage} />
+                <ImageUpload variantImage={variantImage} uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} />
               </div>
             </div>
           </div>

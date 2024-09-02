@@ -11,9 +11,9 @@ export const PaletteProvider = ({ children }) => {
     colorGroupingError: false,
     varianceError: false,
     numToGenerateError: false,
-    uploadedImage: null, 
     originalColors: null, // Colors of current variant palettes
-    variantImage: null,
+    // Images are no longer here because they take up
+    // too much space, lesson learned
   };
 
   const [paletteState, setPaletteState] = useState(initialState);
