@@ -4,7 +4,8 @@ import Header from './components/js/Header';
 import Footer from './components/js/Footer';
 import LandingPage from './components/js/LandingPage';
 import CreatePalettePage from './components/js/CreatePalettePage';
-import './App.css'; // Import the CSS file for general styling
+import HowToUsePage from './components/js/HowToUsePage';
+import './App.css';
 
 const App = () => {
   return (
@@ -15,7 +16,7 @@ const App = () => {
           <Route exact path="/" element={<LandingPage />} />
           <Route path="/create-palette" element={<CreatePalettePage />} />
           <Route path="/picture-presets" element={<div>Picture Presets page coming soon</div>} />
-          <Route path="/how-to-use" element={<div>How to Use page coming soon</div>} />
+          <Route path="/how-to-use" element={<HowToUsePage />} />
         </Routes>
       </div>
       <Footer />
