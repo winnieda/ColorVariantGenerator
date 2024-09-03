@@ -1,15 +1,21 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import tutorialContent from '../md/tutorial.md';
+import TutorialEntry from './TutorialEntry';
+import tutorialData from '../json/Tutorial.json';
+import '../css/HowToUsePage.css';
 
 const HowToUsePage = () => {
-    console.log('Checkpoint 1');
-    return (
-        <div className="how-to-use-page">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{tutorialContent}</ReactMarkdown>
-        </div>
-    );
+  return (
+    <div className="how-to-use-page">
+      {tutorialData.map((item, index) => (
+        <TutorialEntry
+          key={index}
+          title={item.title}
+          img={item.img}
+          description={item.description}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default HowToUsePage;

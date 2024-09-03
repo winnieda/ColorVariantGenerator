@@ -1,6 +1,53 @@
-{
-    "tutorial": [
-        "Welcome to the Color Variant Generator!\n"
-        ]
-  }
+[
+    {
+      "title": "Welcome to the Color Variant Generator!",
+      "img": "img1.jpg",
+      "description": "This is a tool for creating variants on palettes. You can also directly apply these new palettes to your pictures. Whether you're an artist or just someone who loves art, this is the tool for you!"
+    },
+    {
+      "title": "Disclaimer: Creating palettes without images and using the tool without pictures",
+      "img": "img2.jpg",
+      "description": "The rest of the tutorial from here will show you how to create image variants. If you only wish to create palettes and don't care for image variants, you can simply follow the rest of the steps without uploading a picture for good results. If you don't have a suitable picture available or want an example of how to use the generator, go to \"Picture Presets\" in the main menu to try pre-prepared pictures with options filled in."
+    },
+    {
+      "title": "Step 1: Enter Generator",
+      "img": "img3.jpg",
+      "description": "Click \"Create Palette or Variants\" on the main menu to get started." 
+    },
+    {
+      "title": "Step 2: Upload Image",
+      "img": "img4.jpg",
+      "description": "To create image variations you first need to upload an image. Click the button under \"Upload Image for Variation:\" to do so." 
+    },
+    {
+      "title": "Note: Picking good images",
+      "img": "img5.jpg",
+      "description": "The generator can only create good image variants if the original image has flat colors. Pictures with color gradients and photographs should be avoided. Instead use pictures that use a cell-shaded artstyle or completely flat colors." 
+    },
+    {
+      "title": "Step 3: Adjust colors to fit image",
+      "img": "img6.png",
+      "description": "Choose the colors in the image to be the original palette. In this example, we add in the colors from Blastoise's shell and his blue skin. Be sure to add different shades of the same body part to the color list." 
+    },
+    {
+      "title": "Step 4: Group colors to fit image",
+      "img": "img7.png",
+      "description": "Set the color groups. This feature will cause every color in the group to get the same changes. In this example, we group together the colors from Blastoise's shell and the colors from his blue skin seperately so the shaded and unshaded portions of his shell and skin don't look inconsistent. You can group colors together as a list like such: [1, 2, 3], or as a range like such: [1-3], or both like such: [1, 3, 5-8]." 
+    },
+    {
+      "title": "Step 5: Choose Variance",
+      "img": "img8.png",
+      "description": "Choose a Variance. This will affect how much all of the colors change from the original palette. A variance of 20-70 will create a small change. A variance of 100 or above will create a more dramatic change. Going even further beyond that will make the change even greater" 
+    },
+    {
+      "title": "Step 6: Generate Palettes",
+      "img": "img9.png",
+      "description": "Choose how many palettes you want and click \"Generate Palettes\". The order of the colors that are output will correspond to the colors you input." 
+    },
+    {
+      "title": "Step 7: Create Picture Variants",
+      "img": "img10.png",
+      "description": "Finally, click on one of the generated palettes to create a picture variant using that palette. Enjoy!" 
+    }
+  ]
   

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { PaletteContext } from './context/PaletteContext';
 
-const ImageUpload = ({ variantImage, uploadedImage, setUploadedImage}) => {
+const ImageUpload = ({ variantImage, setVariantImage, uploadedImage, setUploadedImage}) => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -10,6 +10,7 @@ const ImageUpload = ({ variantImage, uploadedImage, setUploadedImage}) => {
       try {
         reader.onloadend = () => {
           setUploadedImage(reader.result);
+          setVariantImage(null);
         };
       } catch {
         alert("Image Upload Failed. Your image might be too large");

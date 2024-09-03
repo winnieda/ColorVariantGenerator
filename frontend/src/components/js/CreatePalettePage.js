@@ -6,7 +6,6 @@ import '../css/CreatePalettePage.css';
 import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
 import { PaletteContext } from './context/PaletteContext.js';
 import ImageUpload from './ImageUpload';
-import loadingImage from '../../assets/images/loadingIcon.jpg';
 
 const CreatePalettePage = () => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
@@ -213,7 +212,7 @@ const CreatePalettePage = () => {
     if (selectedPaletteIndex !== index) {
       setSelectedPaletteIndex(index);
       try {
-        setVariantImage(loadingImage);
+        setVariantImage('/images/loadingIcon.jpg');
         const response = await axios.post('http://localhost:5000/api/create-variant-picture', {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
@@ -271,13 +270,13 @@ const CreatePalettePage = () => {
                 <label className="labelExample" htmlFor="colorGroupingExample">ex: [1, 3, 4], [2, 5-7]</label>
                 <input type="text" id="colorGrouping" name="colorGrouping" className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`} />
               </div>
-              <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palette</button>
+              <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palettes</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
             </div>
             <div className="image-upload-box col-md-9">
               <div className='col-md-12'>
                 <label htmlFor="imageupload">Upload Image for Variation:</label>
-                <ImageUpload variantImage={variantImage} uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} />
+                <ImageUpload variantImage={variantImage} setVariantImage={setVariantImage} uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} />
               </div>
             </div>
           </div>
