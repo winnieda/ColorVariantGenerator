@@ -34,8 +34,11 @@ const CreatePalettePage = () => {
   const removeColor = (id) => {
     setPaletteState({
       ...paletteState,
-      colors: colors.filter((color) => color.id !== id)
+      colors: colors.filter((color) => color.id !== id).map((color) => 
+        color.id > id ? { ...color, id: color.id - 1 } : color
+      )
     });
+
   };
 
   const onEyedropperClick = async (id) => {
