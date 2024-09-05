@@ -24,6 +24,8 @@ const CreatePalettePage = () => {
     originalColors, // Colors of current variant palettes
   } = paletteState;
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+
   const addColor = () => {
     setPaletteState({
       ...paletteState,
@@ -38,7 +40,6 @@ const CreatePalettePage = () => {
         color.id > id ? { ...color, id: color.id - 1 } : color
       )
     });
-
   };
 
   const onEyedropperClick = async (id) => {
@@ -68,9 +69,9 @@ const CreatePalettePage = () => {
       const variance = parseInt(document.getElementById('variance').value);
       const numToGenerate = parseInt(document.getElementById('numToGenerate').value);
       const colorGrouping = processNormalizedInput(document.getElementById('colorGrouping').value);
-
+  
       try {
-        const response = await axios.post('http://localhost:5000/api/generate-variants', {
+        const response = await axios.post(`${apiBaseUrl}/api/generate-variants`, {
           colors: colors.map(color => color.hex),
           variance: variance,
           numToGenerate: numToGenerate,
@@ -85,10 +86,11 @@ const CreatePalettePage = () => {
         });
       } catch (error) {
         console.error('Error generating color variants:', error);
+        alert('There was an error generating the color variants. Please try again.');
       }
     }
   };
-
+  
   const handleColorInputChange = (id, field, value) => {
     const updatedColors = colors.map((color) => {
       if (color.id === id) {
@@ -211,12 +213,12 @@ const CreatePalettePage = () => {
   // When user clicks generated palette to make a new picture
   const handlePaletteClick = async (index) => {
     const variantColors = generatedPalettes[index];
-
+  
     if (selectedPaletteIndex !== index) {
       setSelectedPaletteIndex(index);
       try {
         setVariantImage('/images/loadingIcon.jpg');
-        const response = await axios.post('http://localhost:5000/api/create-variant-picture', {
+        const response = await axios.post(`${apiBaseUrl}/api/create-variant-picture`, {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
           originalImage: uploadedImage,
@@ -224,6 +226,7 @@ const CreatePalettePage = () => {
         setVariantImage(response.data.variantImage);
       } catch (error) {
         console.error('Error generating color variants:', error);
+        alert('There was an error generating the color variants. Please try again.');
       }
     }
   };

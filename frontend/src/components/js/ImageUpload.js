@@ -1,6 +1,3 @@
-import React, { useState, useContext } from 'react';
-import { PaletteContext } from './context/PaletteContext';
-
 const ImageUpload = ({ variantImage, setVariantImage, uploadedImage, setUploadedImage}) => {
 
   const handleImageChange = (event) => {
@@ -24,10 +21,10 @@ const ImageUpload = ({ variantImage, setVariantImage, uploadedImage, setUploaded
       <input className="col-md-12" type="file" accept="image/*" onChange={handleImageChange} />
       <div className='image-input-output row col-12'>
         <div id="original-picture" className='image-container col-6'>
-            {uploadedImage && <img src={uploadedImage} alt="Original Image" className="img-fluid" />}
+            {uploadedImage && <img src={uploadedImage} alt="Original" className="img-fluid" />}
         </div>
         <div id="changed-picture" className='image-container col-6'>
-            {variantImage && <img src={variantImage} alt="Variant Image" className="img-fluid" />}
+            {variantImage && <img src={variantImage} alt="Variant" className="img-fluid" />}
         </div>
       </div>
     </div>
