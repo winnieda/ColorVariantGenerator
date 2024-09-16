@@ -91,7 +91,7 @@ const CreatePalettePage = () => {
       const colorGrouping = processNormalizedInput(document.getElementById('colorGrouping').value);
   
       try {
-        const response = await axios.post(`http://localhost:5000/api/generate-variants`, {
+        const response = await axios.post(`${apiBaseUrl}/api/generate-variants`, {
           colors: colors.map(color => color.hex),
           variance: variance,
           numToGenerate: numToGenerate,
@@ -238,7 +238,7 @@ const CreatePalettePage = () => {
       setSelectedPaletteIndex(index);
       try {
         setVariantImage('/images/loadingIcon.jpg');
-        const response = await axios.post(`http://localhost:5000/api/create-variant-picture`, {
+        const response = await axios.post(`${apiBaseUrl}/api/create-variant-picture`, {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
           originalImage: uploadedImage,
