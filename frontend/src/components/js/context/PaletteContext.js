@@ -12,6 +12,9 @@ export const PaletteProvider = ({ children }) => {
     varianceError: false,
     numToGenerateError: false,
     originalColors: null, // Colors of current variant palettes
+    variance: '',
+    numToGenerate: '',
+    colorGrouping: ''
     // Images are no longer here because they take up
     // too much space, lesson learned
   };

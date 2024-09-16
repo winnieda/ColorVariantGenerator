@@ -1,0 +1,31 @@
+.picture-preset {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .picture-preset img {
+    max-width: 200px;
+    border-radius: 8px;
+  }
+  
+  .picture-preset-colors {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .picture-preset-colors div {
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    border-radius: 50%;
+  }
+  
+  .picture-preset:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+  

@@ -90,3 +90,8 @@
 .image-upload-box {
   display: flex;
 }
+
+.btn.btn-warning.clear-button {
+  margin-bottom: 20px;
+  margin-left: 0px;
+}

@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; 
 import axios from 'axios';
 import ColorInput from './ColorInput';
 import { ColorOutputBatch } from './ColorOutput';
@@ -12,6 +13,7 @@ const CreatePalettePage = () => {
   const [selectedPaletteIndex, setSelectedPaletteIndex] = React.useState(null);
   const [uploadedImage, setUploadedImage] = React.useState(null);
   const [variantImage, setVariantImage] = React.useState(null);
+  const location = useLocation();
 
   const {
     colors,
@@ -22,7 +24,25 @@ const CreatePalettePage = () => {
     varianceError,
     numToGenerateError,
     originalColors, // Colors of current variant palettes
+    variance,
+    numToGenerate,
+    colorGrouping
   } = paletteState;
+
+  useEffect(() => {
+    // Check if the navigation came from the preset page
+    const navigatedFromPreset = sessionStorage.getItem('navigatedFromPreset');
+    if (navigatedFromPreset && location.state) {
+      setPaletteState({
+        ...paletteState,
+        colors: location.state.colors || [],
+        colorGrouping: location.state.colorGrouping || ''
+      });
+      setUploadedImage(location.state.uploadedImage || null);
+      // Clear the flag after applying the state
+      sessionStorage.removeItem('navigatedFromPreset');
+    }
+  }, [location.state, setPaletteState]);
 
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
 
@@ -71,7 +91,7 @@ const CreatePalettePage = () => {
       const colorGrouping = processNormalizedInput(document.getElementById('colorGrouping').value);
   
       try {
-        const response = await axios.post(`${apiBaseUrl}/api/generate-variants`, {
+        const response = await axios.post(`http://localhost:5000/api/generate-variants`, {
           colors: colors.map(color => color.hex),
           variance: variance,
           numToGenerate: numToGenerate,
@@ -218,7 +238,7 @@ const CreatePalettePage = () => {
       setSelectedPaletteIndex(index);
       try {
         setVariantImage('/images/loadingIcon.jpg');
-        const response = await axios.post(`${apiBaseUrl}/api/create-variant-picture`, {
+        const response = await axios.post(`http://localhost:5000/api/create-variant-picture`, {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
           originalImage: uploadedImage,
@@ -235,8 +255,36 @@ const CreatePalettePage = () => {
     setSelectedPaletteIndex(null);
   }, [generatedPalettes]);
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setPaletteState({
+      ...paletteState,
+      [name]: value
+    });
+  };
+
+  const clearAll = () => {
+    setPaletteState({
+      colors: [{ id: 0, hex: '', r: '', g: '', b: '' }],
+      generatedColorsVisible: false,
+      generatedPalettes: [],
+      errorMessage: '',
+      colorGroupingError: false,
+      varianceError: false,
+      numToGenerateError: false,
+      originalColors: null,
+      variance: '',
+      numToGenerate: '',
+      colorGrouping: ''
+    });
+    setUploadedImage(null);
+    setVariantImage(null);
+    setSelectedPaletteIndex(null);
+  };
+
   return (
     <div className="container mt-5">
+      <button onClick={clearAll} className="btn btn-warning clear-button">Clear Page</button>
       <div className="row justify-content-center">
         <div className="col-12 mb-4">
           <div className="color-inputs">
@@ -260,21 +308,43 @@ const CreatePalettePage = () => {
             <ColorOutputBatch palette={colors.map(color => color.hex)} wide={true} />
           </div>
         </div>
+
         <div className="col-12 mb-4">
           <div className="row">
             <div className="col-md-3">
               <div className="valueInput mb-3">
                 <label htmlFor="variance">Variance:</label>
-                <input type="number" id="variance" name="variance" className={`form-control ${varianceError ? 'is-invalid' : ''}`} />
+                <input
+                  type="number"
+                  id="variance"
+                  name="variance"
+                  value={variance}
+                  onChange={handleInputChange}
+                  className={`form-control ${varianceError ? 'is-invalid' : ''}`}
+                />
               </div>
               <div className="valueInput mb-3">
                 <label htmlFor="numToGenerate">Number of Palettes to Generate:</label>
-                <input type="number" id="numToGenerate" name="numToGenerate" className={`form-control ${numToGenerateError ? 'is-invalid' : ''}`} />
+                <input
+                  type="number"
+                  id="numToGenerate"
+                  name="numToGenerate"
+                  value={numToGenerate}
+                  onChange={handleInputChange}
+                  className={`form-control ${numToGenerateError ? 'is-invalid' : ''}`}
+                />
               </div>
               <div className="valueInput mb-3">
                 <label htmlFor="colorGrouping">Color Grouping: </label>
                 <label className="labelExample" htmlFor="colorGroupingExample">ex: [1, 3, 4], [2, 5-7]</label>
-                <input type="text" id="colorGrouping" name="colorGrouping" className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`} />
+                <input
+                  type="text"
+                  id="colorGrouping"
+                  name="colorGrouping"
+                  value={colorGrouping}
+                  onChange={handleInputChange}
+                  className={`form-control ${colorGroupingError ? 'is-invalid' : ''}`}
+                />
               </div>
               <button onClick={handleGeneratePalette} className="btn btn-success">Generate Palettes</button>
               {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
@@ -287,6 +357,7 @@ const CreatePalettePage = () => {
             </div>
           </div>
         </div>
+
         {generatedColorsVisible && (
           <div className="col-12">
             <div className="color-outputs">
@@ -296,7 +367,7 @@ const CreatePalettePage = () => {
               {generatedPalettes.map((palette, index) => (
                 <div
                   key={index}
-                  className={`palette-output col-sm-12 col-md-6 ${uploadedImage && selectedPaletteIndex != index ? 'hoverable' : ''} ${selectedPaletteIndex === index ? 'selected' : ''}`}
+                  className={`palette-output col-sm-12 col-md-6 ${uploadedImage && selectedPaletteIndex !== index ? 'hoverable' : ''} ${selectedPaletteIndex === index ? 'selected' : ''}`}
                   onClick={() => uploadedImage && handlePaletteClick(index)}
                 >
                   <div className="palette-label col-12">Palette {index + 1}:</div>

@@ -1,0 +1,23 @@
+.picture-presets-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .picture-presets-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .picture-presets-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .picture-presets-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
