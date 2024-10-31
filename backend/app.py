@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from login import auth_bp, login_manager
 from PIL import Image
 import random
 import base64
@@ -7,6 +8,13 @@ from io import BytesIO
 
 app = Flask(__name__)
 CORS(app)
+app.secret_key = 'your_secret_key_here'  # Set a secure secret key
+
+# Initialize Flask-Login
+login_manager.init_app(app)
+
+# Register the auth blueprint
+app.register_blueprint(auth_bp)
 
 def is_within_tolerance(color1, color2, tolerance=10):
     return all(abs(c1 - c2) <= tolerance for c1, c2 in zip(color1, color2))
