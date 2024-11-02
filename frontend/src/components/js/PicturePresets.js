@@ -90,7 +90,7 @@ const PicturePresets = () => {
     <div className="picture-presets-container">
       <h2 className="picture-presets-title">Picture Presets Page</h2>
       <p className="picture-presets-description">
-        Click on a preset to load it into the palette creator. This is a work in progress and will feature a full database of images soon.
+        Click on a preset to load it into the palette creator. This is a work in progress and will feature a full database of images at some point.
       </p>
       <div className="picture-presets-grid">
         {presets.map((preset, index) => (

@@ -8,7 +8,7 @@ import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js'
 import { PaletteContext } from './context/PaletteContext.js';
 import ImageUpload from './ImageUpload';
 
-const CreatePalettePage = () => {
+const CreatePalettePage = (isAuthenticated) => {
   const { paletteState, setPaletteState } = useContext(PaletteContext);
   const [selectedPaletteIndex, setSelectedPaletteIndex] = React.useState(null);
   const [uploadedImage, setUploadedImage] = React.useState(null);

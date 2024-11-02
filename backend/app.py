@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_login import current_user
 from flask_cors import CORS
 from login import auth_bp, login_manager
 from PIL import Image
@@ -7,8 +8,12 @@ import base64
 from io import BytesIO
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.secret_key = 'your_secret_key_here'  # Set a secure secret key
+
+app.config['SESSION_COOKIE_SAMESITE'] = "None"    # Allows cross-site cookies
+app.config['SESSION_COOKIE_SECURE'] = True        # Requires HTTPS
+# app.config['SESSION_COOKIE_SECURE'] = False
 
 # Initialize Flask-Login
 login_manager.init_app(app)
@@ -145,6 +150,12 @@ def create_variant_picture():
 
     # Send the base64 encoded image back as part of the response
     return jsonify({'variantImage': f"data:image/png;base64,{img_str}"})
+
+@app.route('/check-session', methods=['GET'])
+def check_session():
+    if current_user.is_authenticated:
+        return jsonify(isAuthenticated=True), 200
+    return jsonify(isAuthenticated=False), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

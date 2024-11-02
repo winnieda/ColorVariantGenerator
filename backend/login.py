@@ -46,7 +46,7 @@ def register():
     data = request.json
     username = data['username']
     password = data['password']
-    email = data['email']
+    email = data.get('email')  # This will be None if email is not provided
 
     if User.get_user_by_username(username):
         return jsonify({'error': 'User already exists'}), 409
@@ -55,8 +55,10 @@ def register():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO User (username, password_hash, email) VALUES (%s, %s, %s)",
-                   (username, password_hash, email))
+    cursor.execute(
+        "INSERT INTO User (username, password_hash, email) VALUES (%s, %s, %s)",
+        (username, password_hash, email)
+    )
     conn.commit()
     conn.close()
 
@@ -85,16 +87,28 @@ def logout():
 # Save Palette Endpoint
 @auth_bp.route('/save_palette', methods=['POST'])
 @login_required
-def save_palette_route():
+def save_palette():
     data = request.json
-    palette_data = data.get('palette_data')  # Expecting this to be a JSON-like structure
+    palette_data = data.get('palette')
 
+    # Example logic to store palette in the database
     if not palette_data:
-        return jsonify({'error': 'Palette data is required'}), 400
+        return jsonify({'error': 'Palette data is missing'}), 400
 
-    # Save the palette for the current user
-    save_palette(current_user.id, palette_data)
-    return jsonify({'message': 'Palette saved successfully'}), 201
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO Palettes (user_id, palette_data) VALUES (%s, %s)",
+            (current_user.id, str(palette_data))
+        )
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': 'Palette saved successfully'}), 201
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Failed to save palette'}), 500
 
 # Get Palettes Endpoint
 @auth_bp.route('/get_palettes', methods=['GET'])
