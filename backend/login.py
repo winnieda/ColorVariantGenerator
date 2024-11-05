@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection, save_palette, get_palettes 
+import json
 
 # Define the blueprint
 auth_bp = Blueprint('auth', __name__)
@@ -74,10 +75,11 @@ def login():
     user = User.get_user_by_username(username)
     if user and check_password_hash(user.password_hash, password):
         login_user(user)
-        return jsonify({'message': 'Login successful'}), 200
+        # Return the username so frontend knows what username is
+        return jsonify({'message': 'Login successful', 'username': username, 'id': user.id}), 200
     else:
-        return jsonify({'error': 'Invalid credentials'}), 401
-
+        return jsonify({'message': 'Invalid credentials'}), 401
+    
 # Logout endpoint
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
@@ -89,7 +91,7 @@ def logout():
 @login_required
 def save_palette():
     data = request.json
-    palette_data = data.get('palette')
+    palette_data = data.get('palette_data')
 
     # Example logic to store palette in the database
     if not palette_data:
@@ -100,7 +102,7 @@ def save_palette():
         cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO Palettes (user_id, palette_data) VALUES (%s, %s)",
-            (current_user.id, str(palette_data))
+            (current_user.id, json.dumps(palette_data))
         )
         conn.commit()
         conn.close()
@@ -111,9 +113,11 @@ def save_palette():
         return jsonify({'error': 'Failed to save palette'}), 500
 
 # Get Palettes Endpoint
-@auth_bp.route('/get_palettes', methods=['GET'])
-@login_required
-def get_palettes_route():
-    # Retrieve palettes for the current user
-    palettes = get_palettes(current_user.id)
-    return jsonify(palettes), 200
+@auth_bp.route('/get_palettes/<int:user_id>', methods=['GET'])
+def get_palettes_route(user_id):
+    result = get_palettes(user_id)
+    if result is None:
+        return jsonify({'error': 'User not found'}), 404
+    
+    palettes, username = result
+    return jsonify({'palettes': palettes, 'username': username}), 200

@@ -26,9 +26,8 @@ const LoginPage = ({ onLogin }) => {
         password,
       }, { withCredentials: true });
 
-      console.log(response.data.message);
       setError(null);
-      onLogin();
+      onLogin(response.data.username, response.data.id);
       navigate('/');
     } catch (error) {
       setError(error.response?.data?.error || 'Login failed');

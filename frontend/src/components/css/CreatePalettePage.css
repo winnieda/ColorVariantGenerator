@@ -95,3 +95,25 @@
   margin-bottom: 20px;
   margin-left: 0px;
 }
+
+.save-button-container {
+  display: inline-block;
+  float: right;
+  margin-left: 10px;
+}
+
+.save-button {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.save-button i {
+  color: #007bff;
+  font-size: 1.2em;
+}
+
+.save-button:hover i {
+  color: #0056b3;
+}

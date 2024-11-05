@@ -154,8 +154,9 @@ def create_variant_picture():
 @app.route('/check-session', methods=['GET'])
 def check_session():
     if current_user.is_authenticated:
-        return jsonify(isAuthenticated=True), 200
-    return jsonify(isAuthenticated=False), 200
+        return jsonify({'isAuthenticated': True, 'username': current_user.username, 'id': current_user.id}), 200  # Include username
+    return jsonify({'isAuthenticated': False}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)

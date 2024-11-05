@@ -1,13 +1,10 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../css/Header.css';
 
-const Header = ({ isAuthenticated, onLogout }) => {
-  // Don't show if on login or signup page
-  const location = useLocation();
-  const excludedPaths = ['/login-page', '/sign-up'];
-  const showAuthButton = !excludedPaths.includes(location.pathname);
-
+// Note: In a more serious situation find way to make authenticated
+// and username accessible anywhere
+const Header = ({ isAuthenticated, username, userId, onLogout }) => {
   return (
     <header className="header bg-dark text-white p-3">
       <div className="header-content container">
@@ -17,16 +14,21 @@ const Header = ({ isAuthenticated, onLogout }) => {
           </Link>
         </h1>
         <nav className="header-nav">
-          {showAuthButton && (
-            isAuthenticated ? (
+          {isAuthenticated && (
+            <>
+              <span className="username-display">Logged in as {username}</span>
+              <Link to={`/user/${userId}`} className="btn btn-light mx-2">
+                Profile
+              </Link>
               <button onClick={onLogout} className="btn btn-light">
                 Logout
               </button>
-            ) : (
-              <Link to="/login-page" className="btn btn-light">
-                Login
-              </Link>
-            )
+            </>
+          )}
+          {!isAuthenticated && (
+            <Link to="/login-page" className="btn btn-light">
+              Login
+            </Link>
           )}
         </nav>
       </div>

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ColorInput from './ColorInput';
 import { ColorOutputBatch } from './ColorOutput';
+import PaletteOutput from './PaletteOutput';
 import '../css/CreatePalettePage.css';
 import { normalizeInput, processNormalizedInput } from '../utils/InputParser.js';
 import { PaletteContext } from './context/PaletteContext.js';
@@ -44,7 +45,8 @@ const CreatePalettePage = (isAuthenticated) => {
     }
   }, [location.state, setPaletteState]);
 
-  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+  // const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+const apiBaseUrl = 'http://127.0.0.1:5000';
 
   const addColor = () => {
     setPaletteState({
@@ -358,22 +360,23 @@ const CreatePalettePage = (isAuthenticated) => {
           </div>
         </div>
 
+        {/*Palette Outputs from flask*/}
         {generatedColorsVisible && (
           <div className="col-12">
-            <div className="color-outputs">
-              <h3>Variant Palettes:</h3>
-            </div>
             <div className="row">
-              {generatedPalettes.map((palette, index) => (
-                <div
-                  key={index}
-                  className={`palette-output col-sm-12 col-md-6 ${uploadedImage && selectedPaletteIndex !== index ? 'hoverable' : ''} ${selectedPaletteIndex === index ? 'selected' : ''}`}
-                  onClick={() => uploadedImage && handlePaletteClick(index)}
-                >
-                  <div className="palette-label col-12">Palette {index + 1}:</div>
-                  <ColorOutputBatch palette={palette} wide={false} />
-                </div>
-              ))}
+              <div className="color-outputs">
+                <h3>Variant Palettes:</h3>
+              </div>
+              {generatedColorsVisible && (
+                <PaletteOutput
+                  generatedPalettes={generatedPalettes}
+                  selectedPaletteIndex={selectedPaletteIndex}
+                  uploadedImage={uploadedImage}
+                  handlePaletteClick={handlePaletteClick}
+                  isAuthenticated={isAuthenticated}
+                  showSaveButton={true}
+                />
+              )}
             </div>
           </div>
         )}

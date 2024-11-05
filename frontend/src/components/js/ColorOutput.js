@@ -24,7 +24,7 @@ const ColorOutput = ({ hex, wide }) => {
 
   const [r, g, b] = hexToRgb(hex);
 
-  const columns = wide ? "col-sm-6 col-md-3 col-lg-2" : "col-md-6 col-lg-4";
+  const columns = wide ? "col-sm-6 col-md-3 col-lg-2" : "col-md-6 col-lg-4 col-xl-3";
 
   return (
   <div className={`color-output-container ${columns}`}>
@@ -38,6 +38,7 @@ const ColorOutput = ({ hex, wide }) => {
 };
 
 export const ColorOutputBatch = ({ palette, wide }) => {
+  console.log("Palette input: ", palette);
   return palette ? (
     <div className="color-output-batch col-12">
       {palette.map((color, index) => (

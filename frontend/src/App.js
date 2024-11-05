@@ -10,26 +10,44 @@ import LoginPage from './components/js/LoginPage';
 import SignUpPage from './components/js/SignUpPage';
 import './App.css';
 import axios from 'axios';
+import UserProfile from './components/js/UserProfile';
+import NotFound from './components/js/NotFound';
 
 const apiBaseUrl = 'http://127.0.0.1:5000';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState(null);  
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const checkSession = async () => {
       try {
         const response = await axios.get(`${apiBaseUrl}/check-session`, { withCredentials: true });
         setIsAuthenticated(response.data.isAuthenticated);
+        if (response.data.isAuthenticated) {
+          setUsername(response.data.username);
+          console.log('checking session, response is: ', response.data);
+          console.log('checking session, id is: ', response.data.id);
+          setUserId(response.data.id);
+        }
       } catch (error) {
         console.error("Session check failed:", error);
         setIsAuthenticated(false);
+        setUsername(null); // Note that this shouldn't be necessary
+        setUserId(null);
       }
     };
     checkSession();
-  }, []); // On initial Load
+  }, []);
+   // On initial Load
 
-  const handleLogin = () => setIsAuthenticated(true);
+   const handleLogin = (username_in, userID_in) => {
+    setIsAuthenticated(true);
+    setUsername(username_in);
+    console.log('logging in, id is: ', userID_in);
+    setUserId(userID_in);
+  };  
 
   const handleLogout = async () => {
     try {
@@ -42,7 +60,7 @@ const App = () => {
 
   return (
     <Router>
-      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+      <Header isAuthenticated={isAuthenticated} username={username} userId={userId} onLogout={handleLogout} />
       <div className="content">
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
@@ -51,6 +69,8 @@ const App = () => {
           <Route path="/how-to-use" element={<HowToUsePage />} />
           <Route path="/login-page" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/sign-up" element={<SignUpPage isAuthenticated={isAuthenticated} onLogin={handleLogin} />} />
+          <Route path="/user/:id" element={<UserProfile />} />
+          <Route path="*" element={<NotFound />} />
           </Routes>
       </div>
       <Footer />

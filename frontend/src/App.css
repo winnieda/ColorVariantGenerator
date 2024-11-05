@@ -8,6 +8,7 @@ body {
 .content {
   min-height: calc(100vh - 120px); /* Adjust based on header and footer height */
   padding: 0px;
+  /* background-color: beige; */
 }
 
 h1, h2 {

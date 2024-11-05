@@ -27,10 +27,19 @@ def save_palette(user_id, palette_data):
 def get_palettes(user_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-
-    try:
-        cursor.execute("SELECT id, palette_data, created_at FROM Palette WHERE user_id = %s", (user_id,))
-        palettes = cursor.fetchall()
-        return palettes
-    finally:
+    
+    # Get username, check if exists
+    cursor.execute("SELECT username FROM User WHERE id = %s", (user_id,))
+    user_data = cursor.fetchone()
+    if not user_data:
         conn.close()
+        return None
+    
+    username = user_data['username']
+
+    # Fetch palettes for user
+    cursor.execute("SELECT * FROM Palettes WHERE user_id = %s", (user_id,))
+    palettes = cursor.fetchall()
+    conn.close()
+    
+    return palettes, username

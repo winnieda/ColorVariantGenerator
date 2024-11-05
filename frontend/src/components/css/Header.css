@@ -25,3 +25,9 @@ header {
   border-radius: 4px;
   text-align: center;
 }
+
+.username-display {
+  margin-right: 15px;
+  font-size: 1rem;
+  color: #ffffff;
+}
