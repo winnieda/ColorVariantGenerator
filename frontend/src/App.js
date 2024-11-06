@@ -13,7 +13,8 @@ import axios from 'axios';
 import UserProfile from './components/js/UserProfile';
 import NotFound from './components/js/NotFound';
 
-const apiBaseUrl = 'http://127.0.0.1:5000';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+// const apiBaseUrl = 'http://127.0.0.1:5000';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,8 +43,9 @@ const App = () => {
   }, []);
    // On initial Load
 
-   const handleLogin = (username_in, userID_in) => {
+  const handleLogin = (username_in, userID_in) => {
     setIsAuthenticated(true);
+    console.log('logging in, username is: ', username_in);
     setUsername(username_in);
     console.log('logging in, id is: ', userID_in);
     setUserId(userID_in);

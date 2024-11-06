@@ -4,7 +4,8 @@ import axios from 'axios';
 import PaletteOutput from './PaletteOutput';
 import '../css/UserProfile.css';  // Import the new CSS file
 
-const apiBaseUrl = 'http://127.0.0.1:5000';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+// const apiBaseUrl = 'http://127.0.0.1:5000';
 
 const UserProfile = () => {
   const { id } = useParams();

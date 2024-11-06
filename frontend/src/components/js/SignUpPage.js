@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/SignUpPage.css';
 
-const apiBaseUrl = 'http://127.0.0.1:5000';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+// const apiBaseUrl = 'http://127.0.0.1:5000';
 
 const SignUpPage = ({ isAuthenticated, onLogin }) => {
   const [username, setUsername] = useState('');
@@ -48,7 +49,8 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
       }, { withCredentials: true });
 
       // Call the onLogin function to set the app's isAuthenticated state to true
-      onLogin();
+      console.log('signing up, response: ', response);
+      onLogin(response.data.username, response.data.id);
 
       // Redirect to the home page
       navigate('/');

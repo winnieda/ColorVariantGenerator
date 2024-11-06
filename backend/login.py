@@ -62,8 +62,10 @@ def register():
     )
     conn.commit()
     conn.close()
+    
+    user = User.get_user_by_username(username)
 
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'message': 'User registered successfully', 'username': username, 'id': user.id}), 201
 
 # Login endpoint
 @auth_bp.route('/login', methods=['POST'])

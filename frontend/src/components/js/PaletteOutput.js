@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ColorOutputBatch } from './ColorOutput';
+import axios from 'axios';
 import '../css/CreatePalettePage.css';
+
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+// const apiBaseUrl = 'http://127.0.0.1:5000';
 
 const PaletteOutput = ({
   generatedPalettes = [],
@@ -19,9 +23,31 @@ const PaletteOutput = ({
     setClickedIndexes(new Set());
   }, [generatedPalettes]);
 
-  const handleSaveClick = (index) => {
-    alert(`Saved Palette ${index + 1} to profile!`);
-    setClickedIndexes((prevClickedIndexes) => new Set(prevClickedIndexes).add(index));
+  const handleSaveClick = async (index) => {
+    if (!isAuthenticated) {
+      alert("You are not logged in. Please log in to save palettes.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${apiBaseUrl}/save_palette`, {
+        palette_data: { colors: generatedPalettes[index] }
+      }, { withCredentials: true });
+
+      if (response.status === 201) {
+        alert(`Saved Palette ${index + 1} to profile!`);
+        setClickedIndexes((prevClickedIndexes) => new Set(prevClickedIndexes).add(index));
+      } else {
+        alert("Failed to save palette. Please try again.");
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("Session expired. Please log in again.");
+      } else {
+        console.error("Error saving palette:", error);
+        alert("An error occurred while saving the palette. Please try again.");
+      }
+    }
   };
 
   const handleMouseEnter = (index) => setHoveredIndex(index);

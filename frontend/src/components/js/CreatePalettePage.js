@@ -45,8 +45,8 @@ const CreatePalettePage = (isAuthenticated) => {
     }
   }, [location.state, setPaletteState]);
 
-  // const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
-const apiBaseUrl = 'http://127.0.0.1:5000';
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+  // const apiBaseUrl = 'http://127.0.0.1:5000';
 
   const addColor = () => {
     setPaletteState({
