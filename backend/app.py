@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_login import current_user
 from flask_cors import CORS
 from login import auth_bp, login_manager
+from database import test_database_connection
 from PIL import Image
 import random
 import base64
@@ -157,6 +158,9 @@ def check_session():
         return jsonify({'isAuthenticated': True, 'username': current_user.username, 'id': current_user.id}), 200  # Include username
     return jsonify({'isAuthenticated': False}), 200
 
+@app.route("/test-db-connection")
+def test_db():
+    return test_database_connection()
 
 if __name__ == '__main__':
     app.run(debug=True)

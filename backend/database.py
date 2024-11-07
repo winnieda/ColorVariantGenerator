@@ -43,3 +43,12 @@ def get_palettes(user_id):
     conn.close()
     
     return palettes, username
+
+# Test function for database
+def test_database_connection():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT DATABASE()")
+    result = cursor.fetchone()
+    return f"Connected to: {result[0]}\n"
