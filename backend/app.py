@@ -111,7 +111,7 @@ def generate_palette_variant(base_colors, variance, colorGrouping):
     
     return variants
 
-@app.route('/')
+@app.route('/api')
 def home():
     return jsonify(message="Welcome to the Color Variant Generator API")
 
@@ -152,15 +152,15 @@ def create_variant_picture():
     # Send the base64 encoded image back as part of the response
     return jsonify({'variantImage': f"data:image/png;base64,{img_str}"})
 
-@app.route('/check-session', methods=['GET'])
+@app.route('/api/check-session', methods=['GET'])
 def check_session():
     if current_user.is_authenticated:
         return jsonify({'isAuthenticated': True, 'username': current_user.username, 'id': current_user.id}), 200  # Include username
     return jsonify({'isAuthenticated': False}), 200
 
-@app.route("/test-db-connection")
+@app.route("/api/test-db-connection")
 def test_db():
     return test_database_connection()
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)

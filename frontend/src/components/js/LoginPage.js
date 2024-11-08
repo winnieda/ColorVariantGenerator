@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css';
 import { Link } from 'react-router-dom';
 
-// const apiBaseUrl = 'http://127.0.0.1:5000';
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');

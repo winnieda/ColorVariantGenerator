@@ -45,8 +45,8 @@ const CreatePalettePage = (isAuthenticated) => {
     }
   }, [location.state, setPaletteState]);
 
-  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
-  // const apiBaseUrl = 'http://127.0.0.1:5000';
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+  // const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
   const addColor = () => {
     setPaletteState({
@@ -93,7 +93,7 @@ const CreatePalettePage = (isAuthenticated) => {
       const colorGrouping = processNormalizedInput(document.getElementById('colorGrouping').value);
   
       try {
-        const response = await axios.post(`${apiBaseUrl}/api/generate-variants`, {
+        const response = await axios.post(`${apiBaseUrl}/generate-variants`, {
           colors: colors.map(color => color.hex),
           variance: variance,
           numToGenerate: numToGenerate,
@@ -240,7 +240,7 @@ const CreatePalettePage = (isAuthenticated) => {
       setSelectedPaletteIndex(index);
       try {
         setVariantImage('/images/loadingIcon.jpg');
-        const response = await axios.post(`${apiBaseUrl}/api/create-variant-picture`, {
+        const response = await axios.post(`${apiBaseUrl}/create-variant-picture`, {
           originalColors: originalColors.map(originalColors => originalColors.hex),
           variantColors: variantColors,
           originalImage: uploadedImage,

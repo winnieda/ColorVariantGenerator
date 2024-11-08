@@ -42,7 +42,7 @@ def load_user(user_id):
     return None
 
 # Register endpoint
-@auth_bp.route('/register', methods=['POST'])
+@auth_bp.route('/api/register', methods=['POST'])
 def register():
     data = request.json
     username = data['username']
@@ -68,7 +68,7 @@ def register():
     return jsonify({'message': 'User registered successfully', 'username': username, 'id': user.id}), 201
 
 # Login endpoint
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/api/login', methods=['POST'])
 def login():
     data = request.json
     username = data['username']
@@ -83,13 +83,13 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 401
     
 # Logout endpoint
-@auth_bp.route('/logout', methods=['POST'])
+@auth_bp.route('/api/logout', methods=['POST'])
 def logout():
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
 
 # Save Palette Endpoint
-@auth_bp.route('/save_palette', methods=['POST'])
+@auth_bp.route('/api/save_palette', methods=['POST'])
 @login_required
 def save_palette():
     data = request.json
@@ -115,7 +115,7 @@ def save_palette():
         return jsonify({'error': 'Failed to save palette'}), 500
 
 # Get Palettes Endpoint
-@auth_bp.route('/get_palettes/<int:user_id>', methods=['GET'])
+@auth_bp.route('/api/get_palettes/<int:user_id>', methods=['GET'])
 def get_palettes_route(user_id):
     result = get_palettes(user_id)
     if result is None:

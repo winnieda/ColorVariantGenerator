@@ -13,8 +13,8 @@ import axios from 'axios';
 import UserProfile from './components/js/UserProfile';
 import NotFound from './components/js/NotFound';
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
-// const apiBaseUrl = 'http://127.0.0.1:5000';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
