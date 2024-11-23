@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+import mysql
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection, save_palette, get_palettes 
 import json
@@ -45,27 +46,76 @@ def load_user(user_id):
 @auth_bp.route('/api/register', methods=['POST'])
 def register():
     data = request.json
-    username = data['username']
-    password = data['password']
-    email = data.get('email')  # This will be None if email is not provided
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')  # May be `None`
 
+    # Ensure username and password are present
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
+
+    # Check if the username is already taken
     if User.get_user_by_username(username):
-        return jsonify({'error': 'User already exists'}), 409
+        return jsonify({'error': 'Username is already taken'}), 409
 
+    # Validate email if provided
+    if email:
+        if not is_valid_email(email):
+            return jsonify({'error': 'Invalid email address'}), 400
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check if the email already exists in the database
+        cursor.execute("SELECT * FROM User WHERE email = %s", (email,))
+        existing_email = cursor.fetchone()
+        conn.close()
+        
+        if existing_email:
+            return jsonify({'error': 'Email is already registered'}), 409
+
+        # Send confirmation email here in the next implementation step
+        return jsonify({
+            'message': 'Email will be validated. Please check your email for a confirmation link.'
+        }), 200
+
+    # If no email is provided, proceed to create the user
     password_hash = generate_password_hash(password)
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO User (username, password_hash, email) VALUES (%s, %s, %s)",
-        (username, password_hash, email)
-    )
-    conn.commit()
-    conn.close()
-    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO User (username, password_hash, email) VALUES (%s, %s, %s)",
+            (username, password_hash, email)
+        )
+        conn.commit()
+        conn.close()
+    except mysql.connector.errors.IntegrityError as e:
+        if "Duplicate entry" in str(e):
+            if "User.email" in str(e):
+                return jsonify({'error': 'Email is already registered'}), 409
+            if "User.username" in str(e):
+                return jsonify({'error': 'Username is already taken'}), 409
+        raise
+
+
     user = User.get_user_by_username(username)
 
-    return jsonify({'message': 'User registered successfully', 'username': username, 'id': user.id}), 201
+    return jsonify({
+        'message': 'User registered successfully. No email provided.',
+        'username': username,
+        'id': user.id
+    }), 201
+
+
+# Add a basic email validation function
+import re
+
+def is_valid_email(email):
+    # Simple regex for email validation
+    email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    return re.match(email_regex, email) is not None
 
 # Login endpoint
 @auth_bp.route('/api/login', methods=['POST'])

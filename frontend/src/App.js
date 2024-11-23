@@ -12,9 +12,10 @@ import './App.css';
 import axios from 'axios';
 import UserProfile from './components/js/UserProfile';
 import NotFound from './components/js/NotFound';
+import ConfirmationEmailSentPage from './components/js/ConfirmationEmailSentPage';
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-// const apiBaseUrl = 'http://127.0.0.1:5000/api';
+// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,6 +74,7 @@ const App = () => {
           <Route path="/sign-up" element={<SignUpPage isAuthenticated={isAuthenticated} onLogin={handleLogin} />} />
           <Route path="/user/:id" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/email-sent" element={<ConfirmationEmailSentPage />} />
           </Routes>
       </div>
       <Footer />

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/SignUpPage.css';
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-// const apiBaseUrl = 'http://127.0.0.1:5000/api';
+// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const SignUpPage = ({ isAuthenticated, onLogin }) => {
   const [username, setUsername] = useState('');
@@ -12,6 +12,8 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+
   const navigate = useNavigate();
 
   // Redirect to home if the user is already authenticated
@@ -24,39 +26,48 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    // Basic validation: ensure required fields are filled and passwords match
+    // Basic validation
     if (!username || !password) {
-      setError('Username and password are required');
-      return;
+        setError('Username and password are required');
+        return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
+        setError('Passwords do not match');
+        return;
     }
 
     try {
-      // Register the user
-      const response = await axios.post(`${apiBaseUrl}/register`, {
-        username,
-        password,
-        email: email || null,
-      });
+        // Send signup data to the server
+        const response = await axios.post(`${apiBaseUrl}/register`, {
+            username,
+            password,
+            email: email || null, // Include email or `null` if not provided
+        });
+        const { message, username: registeredUsername, id } = response.data;
 
-      // If registration is successful, log in the user automatically
-      await axios.post(`${apiBaseUrl}/login`, {
-        username,
-        password,
-      }, { withCredentials: true });
+        // Handle dynamic responses
+        if (message.includes('No email provided')) {
+            // Auto-login the user if no email is provided
+            await axios.post(`${apiBaseUrl}/login`, {
+                username,
+                password,
+            }, { withCredentials: true });
 
-      // Call the onLogin function to set the app's isAuthenticated state to true
-      console.log('signing up, response: ', response);
-      onLogin(response.data.username, response.data.id);
-
-      // Redirect to the home page
-      navigate('/');
-
+            onLogin(registeredUsername, id);
+            navigate('/');
+        } else if (message.includes('Email will be validated')) {
+            navigate('/email-sent');
+        }
     } catch (error) {
-      setError(error.response?.data?.error || 'Registration failed');
+      const errorMessage = error.response?.data?.error || 'Registration failed';
+
+      if (errorMessage === 'Email is already registered') {
+          setError('The email is already in use. Please use a different email.');
+      } else if (errorMessage === 'Username is already taken') {
+          setError('The username is already taken. Please choose another.');
+      } else {
+          setError(errorMessage);
+      }
     }
   };
 
@@ -92,7 +103,7 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
           />
         </div>
         <div className="form-group">
-          <label>Email (optional)</label>
+          <label>Email (optional, sends confirmation email then enables 2FA)</label>
           <input
             type="email"
             value={email}
