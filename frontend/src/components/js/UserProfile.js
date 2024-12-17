@@ -18,6 +18,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`${apiBaseUrl}/get_palettes/${id}`);
+        console.log('Response is, ', response);
         const rawPalettes = response.data.palettes;
         setPalettes(parsePalettes(rawPalettes));
         setUsername(response.data.username);
@@ -26,6 +27,7 @@ const UserProfile = () => {
           navigate('/404');
         } else {
           setError('An error occurred while fetching user data.');
+          console.log("Error is: ", err)
         }
       }
     };

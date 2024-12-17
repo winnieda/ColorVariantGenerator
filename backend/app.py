@@ -1,12 +1,16 @@
 from flask import Flask, jsonify, request
 from flask_login import current_user
 from flask_cors import CORS
-from login import auth_bp, login_manager
-from database import test_database_connection
+from endpoints.login import auth_bp, login_manager
+from endpoints.database import test_database_connection
 from PIL import Image
 import random
 import base64
 from io import BytesIO
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from database.models import Base
+from database.models import User, Palette
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

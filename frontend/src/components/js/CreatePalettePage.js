@@ -249,6 +249,7 @@ const CreatePalettePage = (isAuthenticated) => {
       } catch (error) {
         console.error('Error generating color variants:', error);
         alert('There was an error generating the color variants. Please try again.');
+        setVariantImage(null);
       }
     }
   };

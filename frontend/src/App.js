@@ -29,8 +29,8 @@ const App = () => {
         setIsAuthenticated(response.data.isAuthenticated);
         if (response.data.isAuthenticated) {
           setUsername(response.data.username);
-          console.log('checking session, response is: ', response.data);
-          console.log('checking session, id is: ', response.data.id);
+          // console.log('checking session, response is: ', response.data);
+          // console.log('checking session, id is: ', response.data.id);
           setUserId(response.data.id);
         }
       } catch (error) {

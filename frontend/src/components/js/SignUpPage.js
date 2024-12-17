@@ -103,7 +103,7 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
           />
         </div>
         <div className="form-group">
-          <label>Email (optional, sends confirmation email then enables 2FA)</label>
+          <label>Email (optional, sends confirmation email then enables 2FA for logins)</label>
           <input
             type="email"
             value={email}
