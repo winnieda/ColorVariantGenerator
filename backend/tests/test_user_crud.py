@@ -6,7 +6,7 @@ from database.user_functions import create_user, read_user, update_user, delete_
 from datetime import datetime, timezone
 
 # Setup for the database connection
-DATABASE_URL = "mysql+pymysql://test_user:test_password@localhost/test_db"
+DATABASE_URL = "mysql+pymysql://Your_Username123:Your_Password123@localhost/test_db"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 

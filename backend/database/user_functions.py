@@ -2,12 +2,13 @@ from sqlalchemy.orm import Session
 from database.models import User
 from datetime import datetime, timezone
 
-def create_user(session: Session, username: str, password_hash: str, email: str = None):
+def create_user(session: Session, username: str, password_hash: str, email: str = None, confirmation_code: str = None):
     user = User(
         username=username,
         password_hash=password_hash,
         email=email,
-        created_at=datetime.now(timezone.utc)
+        created_at=datetime.now(timezone.utc),
+        confirmation_code=confirmation_code
     )
     session.add(user)
     session.commit()

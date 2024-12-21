@@ -17,7 +17,7 @@ auth_bp = Blueprint('auth', __name__)
 login_manager = LoginManager()
 
 # Database connection setup
-DATABASE_URL = "mysql+pymysql://your_username:your_password@localhost/color_variant_db"
+DATABASE_URL = "mysql+pymysql://Your_Username123:Your_Password123@localhost/color_variant_db"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
@@ -79,13 +79,13 @@ def register():
             # send_email(email, subject, body) # Assume this works
 
         password_hash = generate_password_hash(password)
-        create_user(session, username=username, password_hash=password_hash, email=email, confirmation_code=confirmation_code)
+        new_user = create_user(session, username=username, password_hash=password_hash, email=email, confirmation_code=confirmation_code)
         session.commit()
 
         if email:
-            return jsonify({'message': 'Registration successful. Check your email for the confirmation code.'}), 201
+            return jsonify({'message': 'Registration successful. Email will be validated'}), 201
 
-        return jsonify({'message': 'User registered successfully. No email provided.'}), 201
+        return jsonify({'message': 'User registered successfully. No email provided.', 'username': new_user.username, 'id': new_user.id}), 201
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500
@@ -104,6 +104,17 @@ def login():
         return jsonify({'message': 'Login successful', 'username': user.username, 'id': user.id}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
+
+
+@auth_bp.route('/api/logout', methods=['POST'])
+@login_required
+def logout():
+    try:
+        logout_user()
+        return jsonify({'message': 'Logout successful'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @auth_bp.route('/api/save_palette', methods=['POST'])
 @login_required

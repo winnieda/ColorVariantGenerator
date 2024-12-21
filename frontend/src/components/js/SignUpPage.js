@@ -41,7 +41,7 @@ const SignUpPage = ({ isAuthenticated, onLogin }) => {
         const response = await axios.post(`${apiBaseUrl}/register`, {
             username,
             password,
-            email: email || null, // Include email or `null` if not provided
+            email: email || null,
         });
         const { message, username: registeredUsername, id } = response.data;
 

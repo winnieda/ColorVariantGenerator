@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # Import Flask app for configuration
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://your_username:your_password@localhost/color_variant_db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://Your_Username123:Your_Password123@localhost/color_variant_db"
 db = SQLAlchemy(app)
 
 # Load the metadata from models.py

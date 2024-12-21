@@ -5,7 +5,7 @@ from database.palette_functions import create_palette, read_palette
 import json
 
 # Database connection setup
-DATABASE_URL = "mysql+pymysql://your_username:your_password@localhost/color_variant_db"
+DATABASE_URL = "mysql+pymysql://Your_Username123:Your_Password123@localhost/color_variant_db"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 

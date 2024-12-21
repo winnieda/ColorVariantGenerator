@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from database.models import Base
 
-DATABASE_URL = "mysql+pymysql://test_user:test_password@localhost/test_db"
+DATABASE_URL = "mysql+pymysql://Your_Username123:Your_Password123@localhost/test_db"
 engine = create_engine(DATABASE_URL)
 
 def initialize_database():
