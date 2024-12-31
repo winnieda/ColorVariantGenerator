@@ -11,10 +11,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from database.models import Base
 from database.models import User, Palette
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-app.secret_key = 'your_secret_key_here'  # Set a secure secret key
+
+load_dotenv()
+app.secret_key = os.getenv('SECRET_KEY')
 
 app.config['SESSION_COOKIE_SAMESITE'] = "None"    # Allows cross-site cookies
 app.config['SESSION_COOKIE_SECURE'] = True        # Requires HTTPS

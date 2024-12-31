@@ -1,5 +1,10 @@
 import boto3
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # Function to send an email
 def send_email():
@@ -9,8 +14,18 @@ def send_email():
     subject = "Test Email from AWS SES"
     body_text = "This is a test email sent using Amazon SES and Python."
 
+    # Retrieve AWS credentials and region from environment variables
+    aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
+    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
+    aws_region = os.getenv('AWS_REGION')
+
     # Initialize the SES client
-    ses_client = boto3.client('ses', region_name='us-east-2')  # Replace with your SES region
+    ses_client = boto3.client(
+        'ses',
+        region_name=aws_region,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
+    )
 
     try:
         # Send the email
@@ -35,4 +50,5 @@ def send_email():
         print("Error sending email:", e.response['Error']['Message'])
 
 # Call the function
-send_email()
+if __name__ == "__main__":
+    send_email()

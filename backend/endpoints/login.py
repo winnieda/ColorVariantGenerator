@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from database.user_functions import create_user, read_user
 from database.models import User as UserModel
 from endpoints.database import save_palette, get_palettes
+from endpoints.email_utils import send_email
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import json
@@ -23,11 +24,12 @@ Session = sessionmaker(bind=engine)
 
 # User model for Flask-Login
 class User(UserMixin):
-    def __init__(self, id, username, password_hash, email):
+    def __init__(self, id, username, password_hash, email, is_confirmed):
         self.id = id
         self.username = username
         self.password_hash = password_hash
         self.email = email
+        self.is_confirmed = is_confirmed
 
     @staticmethod
     def get_user_by_username(username):
@@ -35,7 +37,7 @@ class User(UserMixin):
         try:
             user = session.query(UserModel).filter_by(username=username).first()
             if user:
-                return User(user.id, user.username, user.password_hash, user.email)
+                return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed)
             return None
         finally:
             session.close()
@@ -47,12 +49,12 @@ def load_user(user_id):
     try:
         user = session.query(UserModel).filter_by(id=user_id).first()
         if user:
-            return User(user.id, user.username, user.password_hash, user.email)
+            return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed)
         return None
     finally:
         session.close()
 
-# Register endpoint
+
 @auth_bp.route('/api/register', methods=['POST'])
 def register():
     data = request.json
@@ -73,13 +75,24 @@ def register():
 
         # Create user with confirmation code if email provided
         confirmation_code = None
+        is_confirmed = False  # Default for users with an email address
         if email:
             confirmation_code = f"{random.randint(100000, 999999)}"
-            body = f"Hello,\n\nYour confirmation code is: {confirmation_code}\n\nThank you!"
-            # send_email(email, subject, body) # Assume this works
+            subject = "ColorVariantGenerator Confirmation Code"
+            body = f"Hello,\n\nYour confirmation code is: {confirmation_code}\n\nThank you for signing up!"
+            send_email(recipient_email=email, subject=subject, body_text=body)  # Assume this works
+        else:
+            is_confirmed = True  # No email provided; user is auto-confirmed
 
         password_hash = generate_password_hash(password)
-        new_user = create_user(session, username=username, password_hash=password_hash, email=email, confirmation_code=confirmation_code)
+        new_user = create_user(
+            session,
+            username=username,
+            password_hash=password_hash,
+            email=email,
+            confirmation_code=confirmation_code,
+            is_confirmed=is_confirmed
+        )
         session.commit()
 
         if email:
@@ -92,6 +105,7 @@ def register():
     finally:
         session.close()
 
+
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
     data = request.json
@@ -99,11 +113,16 @@ def login():
     password = data['password']
 
     user = User.get_user_by_username(username)
-    if user and check_password_hash(user.password_hash, password):
+    if (
+        user and 
+        check_password_hash(user.password_hash, password) and 
+        user.is_confirmed
+    ):
         login_user(user)
         return jsonify({'message': 'Login successful', 'username': user.username, 'id': user.id}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
+
 
 
 @auth_bp.route('/api/logout', methods=['POST'])
@@ -144,3 +163,35 @@ def get_palettes_route(user_id):
 def is_valid_email(email):
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     return re.match(email_regex, email) is not None
+
+@auth_bp.route('/api/confirm-user', methods=['POST'])
+def confirm_user():
+    data = request.json
+    username = data.get('username')
+    code = data.get('code')
+
+    if not username or not code:
+        return jsonify({'error': 'Username and confirmation code are required'}), 400
+
+    session = Session()
+    try:
+        # Fetch user by username
+        user = session.query(UserModel).filter_by(username=username).first()
+
+        if not user:
+            return jsonify({'message': 'Confirmation failed'}), 400
+
+        # Validate the confirmation code and check expiration
+        if user.confirmation_code == code:
+            # Mark user as confirmed
+            user.is_confirmed = True
+            user.confirmation_code = None  # Clear the confirmation code
+            session.commit()
+            return jsonify({'message': 'User confirmed successfully'}), 200
+        else:
+            return jsonify({'message': 'Confirmation failed'}), 400
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': 'An error occurred while confirming the user'}), 500
+    finally:
+        session.close()

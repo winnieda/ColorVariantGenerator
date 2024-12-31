@@ -31,3 +31,5 @@ backend/alembic/__pycache__/
 backend/alembic/versions/__pycache__/
 
 colorvariantgeneratorlaptop.pem
+
+backend/.env
