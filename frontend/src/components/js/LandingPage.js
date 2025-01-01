@@ -55,6 +55,7 @@ const LandingPage = () => {
                 <li>AWS SES (Email Service)</li>
                 <li>AWS Route 53 (Domain Service)</li>
                 <li>Gunicorn (Flask Server)</li>
+                <li>Nginx (Handling https, React deployment, etc.)</li>
               </ul>
               <li><strong>Features:</strong></li>
               <ul>
