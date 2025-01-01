@@ -13,9 +13,10 @@ import axios from 'axios';
 import UserProfile from './components/js/UserProfile';
 import NotFound from './components/js/NotFound';
 import ConfirmationEmailSentPage from './components/js/ConfirmationEmailSentPage';
+import TwoFactorPage from './components/js/TwoFactorPage';
 
-// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-const apiBaseUrl = 'http://127.0.0.1:5000/api';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,8 +30,6 @@ const App = () => {
         setIsAuthenticated(response.data.isAuthenticated);
         if (response.data.isAuthenticated) {
           setUsername(response.data.username);
-          // console.log('checking session, response is: ', response.data);
-          // console.log('checking session, id is: ', response.data.id);
           setUserId(response.data.id);
         }
       } catch (error) {
@@ -46,9 +45,7 @@ const App = () => {
 
   const handleLogin = (username_in, userID_in) => {
     setIsAuthenticated(true);
-    console.log('logging in, username is: ', username_in);
     setUsername(username_in);
-    console.log('logging in, id is: ', userID_in);
     setUserId(userID_in);
   };  
 
@@ -73,6 +70,7 @@ const App = () => {
           <Route path="/login-page" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/sign-up" element={<SignUpPage isAuthenticated={isAuthenticated} onLogin={handleLogin} />} />
           <Route path="/user/:id" element={<UserProfile />} />
+          <Route path="/two-factor" element={<TwoFactorPage username={username} onLogin={handleLogin} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/email-sent" element={<ConfirmationEmailSentPage />} />
           </Routes>

@@ -7,7 +7,8 @@ const Footer = () => {
       <div className="container">
         <p>Made by Daniel Winnie<br/>
         https://github.com/winnieda<br/>
-        https://www.linkedin.com/in/daniel-winnie-a75b91270/</p>
+        https://www.linkedin.com/in/daniel-winnie-a75b91270/<br/>
+        https://superyay.itch.io/</p>
       </div>
     </footer>
   );

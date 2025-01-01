@@ -35,3 +35,9 @@ def delete_user(session: Session, user_id: int):
         session.commit()
         return True
     return False
+
+def set_two_factor_code(session: Session, user_id: int, code: str):
+    user = session.query(User).filter_by(id=user_id).first()
+    if user:
+        user.two_factor_code = code
+        session.commit()

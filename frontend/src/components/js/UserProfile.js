@@ -4,8 +4,8 @@ import axios from 'axios';
 import PaletteOutput from './PaletteOutput';
 import '../css/UserProfile.css';
 
-// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-const apiBaseUrl = 'http://127.0.0.1:5000/api';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -18,7 +18,6 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`${apiBaseUrl}/get_palettes/${id}`);
-        console.log('Response is, ', response);
         const rawPalettes = response.data.palettes;
         setPalettes(parsePalettes(rawPalettes));
         setUsername(response.data.username);
@@ -27,7 +26,6 @@ const UserProfile = () => {
           navigate('/404');
         } else {
           setError('An error occurred while fetching user data.');
-          console.log("Error is: ", err)
         }
       }
     };

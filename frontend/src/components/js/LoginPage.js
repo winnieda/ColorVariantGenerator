@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css';
 import { Link } from 'react-router-dom';
 
-// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-const apiBaseUrl = 'http://127.0.0.1:5000/api';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -15,21 +15,29 @@ const LoginPage = ({ onLogin }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     if (!username || !password) {
       setError('Both username and password are required');
       return;
     }
-
+  
     try {
       const response = await axios.post(`${apiBaseUrl}/login`, {
         username,
         password,
       }, { withCredentials: true });
-
+  
       setError(null);
-      onLogin(response.data.username, response.data.id);
-      navigate('/');
+  
+      if (response.data.message === '2FA code sent to your email') {
+        // Store username in localStorage for retrieval in 2FA page
+        localStorage.setItem('usernameFor2FA', username);
+        navigate('/two-factor');
+      } else {
+        // Regular login flow
+        onLogin(response.data.username, response.data.id);
+        navigate('/');
+      }
     } catch (error) {
       setError(error.response?.data?.error || 'Login failed');
     }

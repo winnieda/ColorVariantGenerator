@@ -38,7 +38,6 @@ const ColorOutput = ({ hex, wide }) => {
 };
 
 export const ColorOutputBatch = ({ palette, wide }) => {
-  console.log("Palette input: ", palette);
   return palette ? (
     <div className="color-output-batch col-12">
       {palette.map((color, index) => (

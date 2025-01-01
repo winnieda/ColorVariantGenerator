@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from database.user_functions import create_user, read_user
+from database.user_functions import create_user, read_user, set_two_factor_code
 from database.models import User as UserModel
 from endpoints.database import save_palette, get_palettes
 from endpoints.email_utils import send_email
@@ -24,12 +24,13 @@ Session = sessionmaker(bind=engine)
 
 # User model for Flask-Login
 class User(UserMixin):
-    def __init__(self, id, username, password_hash, email, is_confirmed):
+    def __init__(self, id, username, password_hash, email, is_confirmed, two_factor_code):
         self.id = id
         self.username = username
         self.password_hash = password_hash
         self.email = email
         self.is_confirmed = is_confirmed
+        self.two_factor_code = two_factor_code
 
     @staticmethod
     def get_user_by_username(username):
@@ -37,10 +38,11 @@ class User(UserMixin):
         try:
             user = session.query(UserModel).filter_by(username=username).first()
             if user:
-                return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed)
+                return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed, user.two_factor_code)
             return None
         finally:
             session.close()
+
 
 # Flask-Login user loader
 @login_manager.user_loader
@@ -49,7 +51,7 @@ def load_user(user_id):
     try:
         user = session.query(UserModel).filter_by(id=user_id).first()
         if user:
-            return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed)
+            return User(user.id, user.username, user.password_hash, user.email, user.is_confirmed, user.two_factor_code)
         return None
     finally:
         session.close()
@@ -118,11 +120,31 @@ def login():
         check_password_hash(user.password_hash, password) and 
         user.is_confirmed
     ):
-        login_user(user)
-        return jsonify({'message': 'Login successful', 'username': user.username, 'id': user.id}), 200
+        # Skip 2FA if email is invalid (null or blank)
+        if not user.email or user.email.strip() == '':
+            login_user(user)
+            return jsonify({'message': 'Login successful', 'username': user.username, 'id': user.id}), 200
+
+        # Generate 2FA code
+        session = Session()
+        try:
+            two_factor_code = f"{random.randint(100000, 999999)}"
+            set_two_factor_code(session, user.id, two_factor_code)
+
+            # Send 2FA code via email
+            subject = "Your 2FA Code"
+            body = f"Hello {user.username},\n\nYour 2FA code is: {two_factor_code}\n\nThank you for using ColorVariantGenerator."
+            send_email(recipient_email=user.email, subject=subject, body_text=body)
+
+            # Return 2FA required response
+            return jsonify({'message': '2FA code sent to your email'}), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({'error': 'An error occurred during 2FA setup'}), 500
+        finally:
+            session.close()
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
-
 
 
 @auth_bp.route('/api/logout', methods=['POST'])
@@ -195,3 +217,42 @@ def confirm_user():
         return jsonify({'error': 'An error occurred while confirming the user'}), 500
     finally:
         session.close()
+
+
+@auth_bp.route('/api/validate-2fa', methods=['POST'])
+def validate_two_factor():
+    data = request.json
+    username = data.get('username')
+    two_factor_code = data.get('code')
+
+    if not username or not two_factor_code:
+        return jsonify({'error': 'Username and 2FA code are required'}), 400
+
+    session = Session()
+    try:
+        # Fetch the user by username
+        user = User.get_user_by_username(username)
+
+        if not user:
+            return jsonify({'message': 'Invalid 2FA code'}), 401
+
+        if user.two_factor_code != two_factor_code:
+            return jsonify({'message': 'Invalid 2FA code'}), 401
+
+        # Clear the 2FA code and log in the user
+        user.two_factor_code = None
+        session.commit()
+
+        login_user(user)
+
+        return jsonify({
+            'message': '2FA validated successfully. You are now logged in.',
+            'username': user.username,
+            'id': user.id
+        }), 200
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': 'An error occurred during 2FA validation'}), 500
+    finally:
+        session.close()
+

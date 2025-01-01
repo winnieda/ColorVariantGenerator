@@ -30,6 +30,7 @@ class User(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     confirmation_code = Column(String(6), nullable=True)
     is_confirmed = Column(Boolean, default=False, nullable=False)
+    two_factor_code = Column(String(6), nullable=True)
 
     # Relationship with palettes
     palettes = relationship("Palette", back_populates="user")

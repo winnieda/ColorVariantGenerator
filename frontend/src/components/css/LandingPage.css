@@ -27,4 +27,52 @@
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+
+.information-header {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: bold;
+}
   
+.landing-blurb {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #ffc107; /* Bootstrap warning color */
+    color: #343a40; /* Bootstrap dark color */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.landing-blurb h4 {
+    font-weight: bold;
+}
+  
+.landing-blurb ul {
+    padding-left: 1.5rem;
+}
+  
+.landing-blurb ul li {
+    margin-bottom: 0.5rem;
+}
+
+.landing-blurb, .about-me-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-me-section img {
+  max-width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.about-me-section {
+  display: flex;
+  align-items: center;
+}

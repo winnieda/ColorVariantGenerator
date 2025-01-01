@@ -41,8 +41,6 @@ def send_email(recipient_email, subject, body_text, sender_email="no-reply@mail.
                 },
             },
         )
-        print("Email sent successfully! Message ID:", response['MessageId'])
         return True
     except ClientError as e:
-        print("Error sending email:", e.response['Error']['Message'])
         return False

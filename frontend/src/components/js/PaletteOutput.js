@@ -3,8 +3,8 @@ import { ColorOutputBatch } from './ColorOutput';
 import axios from 'axios';
 import '../css/CreatePalettePage.css';
 
-// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
-const apiBaseUrl = 'http://127.0.0.1:5000/api';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api';
+// const apiBaseUrl = 'http://127.0.0.1:5000/api';
 
 const PaletteOutput = ({
   generatedPalettes = [],
