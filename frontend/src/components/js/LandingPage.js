@@ -61,6 +61,7 @@ const LandingPage = () => {
                 <li>Two-Factor Authentication (2FA)</li>
                 <li>Confirmation Emails for Account Validation</li>
                 <li>Both of the above sent from custom email address no-reply@colorvariantgenerator.com</li>
+                <li>.env file to keep keys secure on a public repository</li>
                 <li>Session Management with Flask-Login</li>
                 <li>Secure Authentication with Salted and Hashed Passwords</li>
                 <li>RESTful API with Axios for Frontend-Backend Communication</li>
